@@ -15,7 +15,7 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in); // Khởi tạo Scanner
     private static TenantManager tenantManager = new TenantManager(); // Khởi tạo đối tượng TenantManager
     private static HostManager hostManager = new HostManager();
-
+    private static final OwnerManager ownerManager = new OwnerManager(); // Khởi tạo đối tượng OwnerManager
 
     public static void main(String[] args) {
         // Tải dữ liệu từ file
@@ -24,6 +24,7 @@ public class Main {
         paymentManager.loadFromFile("src/File/payments.txt");
         tenantManager.loadFromFile("src/File/tenant.txt");
         hostManager.loadFromFile("src/File/hosts.txt");
+        ownerManager.loadFromFile("src/File/owners.txt");
         int choice = 0;
         do {
             try {
@@ -51,7 +52,11 @@ public class Main {
                     case 18 -> addNewHost();
                     case 19 -> removeHost();
                     case 20 -> updateHost();
-                    case 21 -> System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
+                    case 21 -> displayOwners();
+                    case 22 -> addNewOwner();
+                    case 23 -> removeOwner();
+                    case 24 -> updateOwner();
+                    case 25 -> System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
                     default -> System.out.println("Lựa chọn không hợp lệ. Vui lòng chọn lại.");
                 }
             } catch (NumberFormatException e) {
@@ -59,9 +64,77 @@ public class Main {
             } catch (Exception e) {
                 System.out.println("Đã xảy ra lỗi: " + e.getMessage());
             }
-        } while (choice != 21);
+        } while (choice != 25);
 
         scanner.close(); // Đóng scanner sau khi sử dụng
+    }
+
+    private static void displayOwners() {
+        System.out.println("\nDanh sách chủ sở hữu hiện tại:");
+        for (Owner owner : ownerManager.getAll()) {
+            System.out.println(owner.toString());
+        }
+    }
+
+    private static void addNewOwner() {
+        Owner newOwner = ownerManager.inputOwnerData(); // Phương thức này cần được triển khai trong OwnerManager
+        if (newOwner != null) {
+            ownerManager.add(newOwner);
+            ownerManager.saveToFile("src/File/owners.txt"); // Đường dẫn tới file lưu Owner
+            System.out.println("Thêm chủ sở hữu mới thành công!");
+        } else {
+            System.out.println("Không thể thêm chủ sở hữu do trùng ID.");
+        }
+    }
+
+    private static void removeOwner() {
+        System.out.print("\nNhập ownerId cần xóa: ");
+        String ownerId = scanner.nextLine();
+        ownerManager.remove(ownerId);
+    }
+
+    private static void updateOwner() {
+        System.out.print("\nNhập ownerId cần cập nhật: ");
+        String ownerId = scanner.nextLine();
+
+        // Lấy đối tượng Owner cần cập nhật
+        Owner existingOwner = ownerManager.getOne(ownerId);
+        if (existingOwner == null) {
+            System.out.println("Không tìm thấy chủ sở hữu với ID: " + ownerId);
+            return;
+        }
+
+        System.out.println("Cập nhật chủ sở hữu với ID: " + ownerId);
+        System.out.println("Nhấn Enter để giữ nguyên giá trị cũ.");
+
+        // Nhập thông tin mới cho Owner
+        System.out.print("Tên hiện tại: " + existingOwner.getFullName() + " -> ");
+        String newName = scanner.nextLine();
+        if (!newName.isEmpty()) {
+            existingOwner.setFullName(newName);
+        }
+
+        System.out.print("Ngày sinh hiện tại (yyyy-MM-dd): " + existingOwner.getDateOfBirth() + " -> ");
+        String newDateOfBirth = scanner.nextLine();
+        if (!newDateOfBirth.isEmpty()) {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(newDateOfBirth);
+                existingOwner.setDateOfBirth(date);
+            } catch (ParseException e) {
+                System.out.println("Ngày sinh không hợp lệ. Định dạng đúng: yyyy-MM-dd");
+            }
+        }
+
+        System.out.print("Thông tin liên hệ hiện tại: " + existingOwner.getContactInfo() + " -> ");
+        String newContactInfo = scanner.nextLine();
+        if (!newContactInfo.isEmpty()) {
+            existingOwner.setContactInfo(newContactInfo);
+        }
+
+        // Thực hiện cập nhật
+        ownerManager.update(existingOwner);
+        ownerManager.saveToFile("src/File/owners.txt");
+        System.out.println("Cập nhật chủ sở hữu thành công!");
     }
 
     private static void displayHosts() {
@@ -465,7 +538,12 @@ public class Main {
         System.out.println("18. Thêm Host mới");
         System.out.println("19. Xóa Host");
         System.out.println("20. Cập nhật Host");
-        System.out.println("21. Thoát");
+        System.out.println("------------------------------------------");
+        System.out.println("21. Xem danh sách chủ sở hữu");
+        System.out.println("22. Thêm chủ sở hữu");
+        System.out.println("23. Xóa chủ sở hữu");
+        System.out.println("24. Sửa thông tin chủ sở hữu");
+        System.out.println("25. Thoát");
         System.out.println("Vui lòng chọn option: ");
     }
 }
