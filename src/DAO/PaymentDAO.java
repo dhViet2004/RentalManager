@@ -55,9 +55,24 @@ public class PaymentDAO {
         }
     }
 
-    // Read payments from a file and return them as a list
     public List<Payment> readFromFile() {
         List<Payment> payments = new ArrayList<>();
+        File file = new File(FILE_PATH);  // Kiểm tra file tồn tại hay không
+
+        // Nếu file không tồn tại, yêu cầu người dùng tạo file mới
+        if (!file.exists()) {
+            System.out.println("File Payment không tồn tại.");
+            System.out.print("Bạn có muốn tạo file mới không? (yes/no): ");
+            String response = new Scanner(System.in).nextLine();
+            if (response.equalsIgnoreCase("yes")) {
+                createNewFile();
+            } else {
+                System.out.println("Quá trình dừng lại.");
+                return payments;  // Trả về danh sách rỗng nếu người dùng không muốn tạo file mới
+            }
+        }
+
+        // Đọc dữ liệu từ file nếu file tồn tại
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -71,6 +86,21 @@ public class PaymentDAO {
         }
         return payments;
     }
+
+    // Tạo file mới nếu không tìm thấy
+    private void createNewFile() {
+        try {
+            File file = new File(FILE_PATH);
+            if (file.createNewFile()) {
+                System.out.println("File mới đã được tạo: " + file.getName());
+            } else {
+                System.out.println("File đã tồn tại.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Update payment information in the list and write it back to the file
     public boolean update(Payment updatedPayment) {
         List<Payment> payments = readFromFile();  // Đọc danh sách thanh toán từ file

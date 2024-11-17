@@ -14,6 +14,10 @@ public class Host extends Person implements Comparable<Host> {
 
     }
 
+    public Host(String id) {
+        super(id);
+    }
+
     public List<Property> getManagedProperties() {
         return managedProperties;
     }

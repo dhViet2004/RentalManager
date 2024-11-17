@@ -4,6 +4,9 @@ import Classes.*;
 import Interface.CommercialPropertyManager;
 import Interface.ResidentialPropertyManager;
 import Interface.PaymentManager;
+import Interface.TenantManager;
+
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
@@ -11,13 +14,15 @@ public class Main {
     private static final ResidentialPropertyManager residentialPropertyManager = new ResidentialPropertyManager(); // Khởi tạo đối tượng ResidentialPropertyManager
     private static final PaymentManager paymentManager = new PaymentManager(); // Khởi tạo đối tượng PaymentManager
     private static final Scanner scanner = new Scanner(System.in); // Khởi tạo Scanner
+    private static TenantManager tenantManager = new TenantManager(); // Khởi tạo đối tượng TenantManager
+
 
     public static void main(String[] args) {
         // Tải dữ liệu từ file
         commercialPropertyManager.loadFromFile("src/File/commercial_properties.txt");
         residentialPropertyManager.loadFromFile("src/File/residential_properties.txt"); // Tải dữ liệu ResidentialProperty
         paymentManager.loadFromFile("src/File/payments.txt");
-
+        tenantManager.loadFromFile("src/File/tenant.txt");
         int choice;
         do {
             // Hiển thị menu
@@ -38,12 +43,83 @@ public class Main {
                 case 10 -> addNewResidentialProperty();    // Thêm bất động sản dân dụng mới
                 case 11 -> removeResidentialProperty();    // Xóa bất động sản dân dụng
                 case 12 -> updateResidentialProperty();    // Cập nhật bất động sản dân dụng
-                case 13 -> System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
+                case 13 -> displayTenants();
+                case 14 -> addNewTenant();
+                case 15 -> removeTenant();
+                case 16 -> updateTenant();
+                case 17 -> System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
                 default -> System.out.println("Lựa chọn không hợp lệ. Vui lòng chọn lại.");
             }
-        } while (choice != 13);
+        } while (choice != 17);
 
         scanner.close(); // Đóng scanner sau khi sử dụng
+    }
+    // Quản lý Tenant
+    private static void displayTenants() {
+        System.out.println("\nDanh sách tenants hiện tại:");
+        for (Tenant tenant : tenantManager.getAll()) {
+            System.out.println(tenant.toString());
+        }
+    }
+    private static void addNewTenant() {
+        Tenant newTenant = tenantManager.inputTenantData();
+        if (tenantManager.add(newTenant)) {
+            System.out.println("Thêm tenant mới thành công!");
+            tenantManager.saveToFile("src/File/tenants.txt");
+        } else {
+            System.out.println("Không thể thêm tenant.");
+        }
+    }
+
+
+
+    private static void removeTenant() {
+        System.out.print("\nNhập tenantId cần xóa: ");
+        String tenantId = scanner.nextLine();
+        tenantManager.remove(tenantId);
+    }
+    private static void updateTenant() {
+        System.out.print("\nNhập tenantId cần cập nhật: ");
+        String tenantId = scanner.nextLine();
+
+        // Lấy đối tượng Tenant cần cập nhật
+        Tenant existingTenant = tenantManager.getOne(tenantId);
+        if (existingTenant == null) {
+            System.out.println("Không tìm thấy tenant với tenantId: " + tenantId);
+            return;
+        }
+
+        System.out.println("Cập nhật tenant với ID: " + tenantId);
+        System.out.println("Nhấn Enter để giữ nguyên giá trị cũ.");
+
+        // Nhập các thông tin mới, để trống nếu giữ nguyên giá trị cũ
+        System.out.print("Tên đầy đủ hiện tại: " + existingTenant.getFullName() + " -> ");
+        String newFullName = scanner.nextLine();
+        if (!newFullName.isEmpty()) {
+            existingTenant.setFullName(newFullName);
+        }
+
+        System.out.print("Ngày sinh hiện tại (yyyy-MM-dd): " + existingTenant.getDateOfBirth() + " -> ");
+        String newDateOfBirthStr = scanner.nextLine();
+        if (!newDateOfBirthStr.isEmpty()) {
+            try {
+                Date newDateOfBirth = java.sql.Date.valueOf(newDateOfBirthStr);
+                existingTenant.setDateOfBirth(newDateOfBirth);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Ngày sinh không hợp lệ. Bỏ qua cập nhật ngày sinh.");
+            }
+        }
+
+        System.out.print("Thông tin liên hệ hiện tại: " + existingTenant.getContactInfo() + " -> ");
+        String newContactInfo = scanner.nextLine();
+        if (!newContactInfo.isEmpty()) {
+            existingTenant.setContactInfo(newContactInfo);
+        }
+
+        // Thực hiện cập nhật trong tenantManager
+        tenantManager.update(existingTenant);
+        System.out.println("Cập nhật tenant thành công!");
+        tenantManager.saveToFile("src/File/tenants.txt");
     }
 
     // Quản lý thanh toán
@@ -263,8 +339,6 @@ public class Main {
         residentialPropertyManager.update(updatedProperty);
         System.out.println("Cập nhật bất động sản dân dụng thành công!");
     }
-
-
     private static void displayResidentialProperties() {
         System.out.println("\nDanh sách bất động sản dân dụng hiện tại:");
         for (ResidentialProperty property : residentialPropertyManager.getAll()) {
@@ -298,7 +372,11 @@ public class Main {
         System.out.println("10. Thêm Bất động sản dân dụng");
         System.out.println("11. Xóa Bất động sản dân dụng");
         System.out.println("12. Sửa Bất động sản dân dụng");
-        System.out.println("13. Thoát");
+        System.out.println("13. Hiển thị danh sách tenant");
+        System.out.println("14. Thêm tenant mới");
+        System.out.println("15. Xóa tenant");
+        System.out.println("16. Cập nhật tenant");
+        System.out.println("17. Thoát");
         System.out.println("Vui lòng chọn option: ");
     }
 }

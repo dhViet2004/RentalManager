@@ -13,6 +13,10 @@ public class Owner extends Person{
         this.managingHosts = managingHosts;
     }
 
+    public Owner(String id) {
+        super(id);
+    }
+
     public List<Property> getOwnedProperties() {
         return ownedProperties;
     }

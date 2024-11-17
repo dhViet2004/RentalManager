@@ -47,7 +47,7 @@ public class CommercialPropertyDAO {
         File file = new File(FILE_PATH);
 
         if (!file.exists()) {
-            System.out.println("File không tồn tại.");
+            System.out.println("File Commercial_properties không tồn tại.");
             System.out.print("Bạn có muốn tạo file mới không? (yes/no): ");
             String response = scanner.nextLine();
             if (response.equalsIgnoreCase("yes")) {

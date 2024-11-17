@@ -34,6 +34,9 @@ public class Tenant extends Person {
         this.paymentRecords = paymentRecords;
     }
 
+
+
+
     @Override
     public String toString() {
         return "Tenant{" +

@@ -1,2 +1,1 @@
-2,Cam Son,12000.0,RENTED,Office,2,12.0
-1,VungTau,12.0,AVAILABLE,Retail,12,2.0
+1,Ben Tre,12.0,AVAILABLE,Office,1,1.0
