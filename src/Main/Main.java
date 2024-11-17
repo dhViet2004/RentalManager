@@ -1,11 +1,10 @@
 package Main;
 
 import Classes.*;
-import Interface.CommercialPropertyManager;
-import Interface.ResidentialPropertyManager;
-import Interface.PaymentManager;
-import Interface.TenantManager;
+import Interface.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -15,6 +14,7 @@ public class Main {
     private static final PaymentManager paymentManager = new PaymentManager(); // Khởi tạo đối tượng PaymentManager
     private static final Scanner scanner = new Scanner(System.in); // Khởi tạo Scanner
     private static TenantManager tenantManager = new TenantManager(); // Khởi tạo đối tượng TenantManager
+    private static HostManager hostManager = new HostManager();
 
 
     public static void main(String[] args) {
@@ -23,37 +23,118 @@ public class Main {
         residentialPropertyManager.loadFromFile("src/File/residential_properties.txt"); // Tải dữ liệu ResidentialProperty
         paymentManager.loadFromFile("src/File/payments.txt");
         tenantManager.loadFromFile("src/File/tenant.txt");
-        int choice;
+        hostManager.loadFromFile("src/File/hosts.txt");
+        int choice = 0;
         do {
-            // Hiển thị menu
-            displayMenu();
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Đọc dòng mới còn lại trong bộ đệm
-
-            switch (choice) {
-                case 1 -> displayPayments();  // Xem danh sách thanh toán
-                case 2 -> addNewPayment();    // Thêm thanh toán mới
-                case 3 -> removePayment();    // Xóa thanh toán
-                case 4 -> updatePayment();    // Cập nhật thanh toán
-                case 5 -> displayCommercialProperties();  // Xem danh sách bất động sản thương mại
-                case 6 -> addNewCommercialProperty();    // Thêm bất động sản thương mại mới
-                case 7 -> removeCommercialProperty();    // Xóa bất động sản thương mại
-                case 8 -> updateCommercialProperty();    // Cập nhật bất động sản thương mại
-                case 9 -> displayResidentialProperties();  // Xem danh sách bất động sản dân dụng
-                case 10 -> addNewResidentialProperty();    // Thêm bất động sản dân dụng mới
-                case 11 -> removeResidentialProperty();    // Xóa bất động sản dân dụng
-                case 12 -> updateResidentialProperty();    // Cập nhật bất động sản dân dụng
-                case 13 -> displayTenants();
-                case 14 -> addNewTenant();
-                case 15 -> removeTenant();
-                case 16 -> updateTenant();
-                case 17 -> System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
-                default -> System.out.println("Lựa chọn không hợp lệ. Vui lòng chọn lại.");
+            try {
+                displayMenu();
+                System.out.print("Nhập lựa chọn của bạn: ");
+                choice = Integer.parseInt(scanner.nextLine()); // Xử lý ngoại lệ khi nhập không phải số
+                switch (choice) {
+                    case 1 -> displayPayments();
+                    case 2 -> addNewPayment();
+                    case 3 -> removePayment();
+                    case 4 -> updatePayment();
+                    case 5 -> displayCommercialProperties();
+                    case 6 -> addNewCommercialProperty();
+                    case 7 -> removeCommercialProperty();
+                    case 8 -> updateCommercialProperty();
+                    case 9 -> displayResidentialProperties();
+                    case 10 -> addNewResidentialProperty();
+                    case 11 -> removeResidentialProperty();
+                    case 12 -> updateResidentialProperty();
+                    case 13 -> displayTenants();
+                    case 14 -> addNewTenant();
+                    case 15 -> removeTenant();
+                    case 16 -> updateTenant();
+                    case 17 -> displayHosts();
+                    case 18 -> addNewHost();
+                    case 19 -> removeHost();
+                    case 20 -> updateHost();
+                    case 21 -> System.out.println("Cảm ơn bạn đã sử dụng chương trình!");
+                    default -> System.out.println("Lựa chọn không hợp lệ. Vui lòng chọn lại.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Lỗi: Vui lòng nhập một số nguyên.");
+            } catch (Exception e) {
+                System.out.println("Đã xảy ra lỗi: " + e.getMessage());
             }
-        } while (choice != 17);
+        } while (choice != 21);
 
         scanner.close(); // Đóng scanner sau khi sử dụng
     }
+
+    private static void displayHosts() {
+        System.out.println("\nDanh sách Host hiện tại:");
+        for (Host host : hostManager.getAll()) {
+            System.out.println(host.toString());
+        }
+    }
+
+    private static void addNewHost() {
+        Host newHost = hostManager.inputHostData(); // Phương thức này cần được triển khai trong HostManager
+        if (newHost != null) {
+            hostManager.add(newHost);
+            hostManager.saveToFile("src/File/hosts.txt"); // Đường dẫn tới file Host
+            System.out.println("Thêm Host mới thành công!");
+        } else {
+            System.out.println("Không thể thêm Host do trùng ID.");
+        }
+    }
+    private static void removeHost() {
+        System.out.print("\nNhập hostId cần xóa: ");
+        String hostId = scanner.nextLine();
+        hostManager.remove(hostId);
+    }
+
+    private static void updateHost() {
+        System.out.print("\nNhập hostId cần cập nhật: ");
+        String hostId = scanner.nextLine();
+
+        // Lấy đối tượng Host cần cập nhật
+        Host existingHost = hostManager.getOne(hostId);
+        if (existingHost == null) {
+            System.out.println("Không tìm thấy Host với ID: " + hostId);
+            return;
+        }
+
+        System.out.println("Cập nhật Host với ID: " + hostId);
+        System.out.println("Nhấn Enter để giữ nguyên giá trị cũ.");
+
+        // Nhập thông tin mới cho Host
+        System.out.print("Tên hiện tại: " + existingHost.getFullName() + " -> ");
+        String newName = scanner.nextLine();
+        if (!newName.isEmpty()) {
+            existingHost.setFullName(newName);
+        }
+
+        System.out.print("Ngày sinh hiện tại (yyyy-MM-dd): " + existingHost.getDateOfBirth() + " -> ");
+        String newDateOfBirth = scanner.nextLine();
+        if (!newDateOfBirth.isEmpty()) {
+            try {
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(newDateOfBirth);
+                existingHost.setDateOfBirth(date);
+            } catch (ParseException e) {
+                System.out.println("Ngày sinh không hợp lệ. Định dạng đúng: yyyy-MM-dd");
+            }
+        }
+
+        System.out.print("Thông tin liên hệ hiện tại: " + existingHost.getContactInfo() + " -> ");
+        String newContactInfo = scanner.nextLine();
+        if (!newContactInfo.isEmpty()) {
+            existingHost.setContactInfo(newContactInfo);
+        }
+
+        // Thực hiện cập nhật
+        hostManager.update(existingHost);
+        hostManager.saveToFile("src/File/hosts.txt");
+        System.out.println("Cập nhật Host thành công!");
+    }
+
+
+
+
+
     // Quản lý Tenant
     private static void displayTenants() {
         System.out.println("\nDanh sách tenants hiện tại:");
@@ -376,7 +457,11 @@ public class Main {
         System.out.println("14. Thêm tenant mới");
         System.out.println("15. Xóa tenant");
         System.out.println("16. Cập nhật tenant");
-        System.out.println("17. Thoát");
+        System.out.println("17. Hiển thị danh sách Host");
+        System.out.println("18. Thêm Host mới");
+        System.out.println("19. Xóa Host");
+        System.out.println("20. Cập nhật Host");
+        System.out.println("21. Thoát");
         System.out.println("Vui lòng chọn option: ");
     }
 }
