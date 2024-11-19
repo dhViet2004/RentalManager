@@ -1,0 +1,2 @@
+2,1,3,3;,CommercialProperty;1;Ben Tre;12.0;AVAILABLE;Office;1;1.0,1;,DAILY,1,1,1.0,NEW
+1,1,3,3;,ResidentialProperty;1;BanDon;123456.0;RENTED;12;true;false,1;,WEEKLY,1,no,1.0,NEW

@@ -13,7 +13,8 @@ public abstract class Property {
         AVAILABLE, RENTED, UNDER_MAINTENANCE;
     }
 
-    public Property() {
+    public Property(String id) {
+        this.propertyId = id;
     }
 
     public Property(String propertyId, String address, double pricing, PropertyStatus status) {

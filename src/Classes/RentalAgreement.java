@@ -2,6 +2,7 @@ package Classes;
 
 import java.time.Period;
 import java.util.List;
+import java.util.Objects;
 
 public class RentalAgreement implements Comparable<RentalAgreement> {
     private String contractId;
@@ -41,6 +42,9 @@ public class RentalAgreement implements Comparable<RentalAgreement> {
         this.contractTerms = contractTerms;
         this.rentalFee = rentalFee;
         this.status = status;
+    }
+
+    public RentalAgreement() {
     }
 
     // Getters và Setters
@@ -139,11 +143,23 @@ public class RentalAgreement implements Comparable<RentalAgreement> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        RentalAgreement that = (RentalAgreement) o;
+        return Objects.equals(contractId, that.contractId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(contractId);
+    }
+
+    @Override
     public String toString() {
         return "RentalAgreement{" +
                 "contractId='" + contractId + '\'' +
-                ", owner=" + owner +
-                ", mainTenant=" + mainTenant +
+                ", owner=" + owner.getFullName() +
+                ", mainTenant=" + mainTenant.getFullName() +
                 ", subTenants=" + subTenants +
                 ", rentedProperty=" + rentedProperty +
                 ", hosts=" + hosts +
