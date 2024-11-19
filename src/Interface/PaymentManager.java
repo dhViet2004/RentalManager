@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class PaymentManager implements RentalManager<Payment> {
     private List<Payment> payments = new ArrayList<>();
     private PaymentDAO paymentDAO = new PaymentDAO(); // Create PaymentDAO object to save and load from file
-
+    private TenantManager tenantManager = new TenantManager();
     @Override
     public boolean add(Payment item) {
         Payment temp = new Payment(item.getPaymentMethod(), item.getDate(), item.getAmount(), item.getTenant(), item.getPaymentId());
@@ -102,8 +102,6 @@ public class PaymentManager implements RentalManager<Payment> {
             payments = paymentDAO.readFromFile();
             if (payments.isEmpty()) {
                 System.out.println("No payment data found in file: " + fileName);
-            } else {
-                System.out.println("Successfully loaded from file: " + fileName);
             }
         } catch (Exception e) {
             System.out.println("Error while reading from file: " + fileName);
@@ -111,17 +109,16 @@ public class PaymentManager implements RentalManager<Payment> {
         }
     }
 
-    // Method to prompt user input and return a Payment object
     public Payment inputPaymentData() {
         Scanner scanner = new Scanner(System.in);
 
-        // Enter payment information
+        // Nhập paymentId
         String paymentId;
         while (true) {
             System.out.print("Enter paymentId: ");
             paymentId = scanner.nextLine();
 
-            // Check if paymentId already exists in the payments list
+            // Kiểm tra xem paymentId đã tồn tại hay chưa
             boolean exists = false;
             for (Payment p : payments) {
                 if (p.getPaymentId().equals(paymentId)) {
@@ -137,21 +134,31 @@ public class PaymentManager implements RentalManager<Payment> {
             }
         }
 
+        // Nhập tenantId và tự động gán Tenant
         System.out.print("Enter tenantId: ");
         String tenantId = scanner.nextLine();
+        tenantManager.loadFromFile("src/File/tenants.txt");
+        Tenant tenant = tenantManager.getOne(tenantId); // Tìm tenant theo tenantId
+        if (tenant != null) {
+            System.out.println("Found tenant: " + tenant); // Hiển thị thông tin tenant tìm thấy
+        } else {
+            System.out.println("No tenant found with id: " + tenantId); // Nếu không tìm thấy tenant
+        }
 
+        // Nhập số tiền thanh toán
         System.out.print("Enter amount: ");
         double amount = scanner.nextDouble();
 
-        scanner.nextLine();
+        scanner.nextLine(); // Đọc dòng dư
 
+        // Nhập phương thức thanh toán
         System.out.print("Enter payment method (e.g., Credit Card, Bank Transfer): ");
         String paymentMethod = scanner.nextLine();
 
-        Tenant tenant = new Tenant(tenantId);
-
+        // Tạo đối tượng Payment với thông tin đã nhập
         Payment payment = new Payment(paymentMethod, new Date(), amount, tenant, paymentId);
 
-        return payment;
+        return payment; // Trả về đối tượng Payment đã tạo
     }
+
 }

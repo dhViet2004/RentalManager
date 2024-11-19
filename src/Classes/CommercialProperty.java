@@ -38,15 +38,14 @@ public class CommercialProperty extends Property implements Comparable<Commercia
 
     @Override
     public String toString() {
-        return "CommercialProperty{" +
-                "propertyId='" + getPropertyId() + '\'' +
-                ", address='" + getAddress() + '\'' +
-                ", pricing=" + getPricing() +
-                ", status=" + getStatus() +
-                ", businessType='" + businessType + '\'' +
-                ", parkingSpaces=" + parkingSpaces +
-                ", squareFootage=" + squareFootage +
-                '}';
+        return  "|       CommercialProperty" + "\n" +
+                "|       PropertyId: " + getPropertyId() + "\n" +
+                "|       Address: " + getAddress() + "\n" +
+                "|       Pricing: " + getPricing() + "\n" +
+                "|       Status: " + getStatus() + "\n" +
+                "|       BusinessType: " + businessType + "\n" +
+                "|       ParkingSpaces: " + parkingSpaces + "\n" +
+                "|       SquareFootage: " + squareFootage;
     }
 
     @Override

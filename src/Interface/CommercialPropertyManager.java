@@ -90,8 +90,6 @@ public class CommercialPropertyManager implements RentalManager<CommercialProper
             properties = propertyDAO.readFromFile();
             if (properties.isEmpty()) {
                 System.out.println("No data found in file: " + fileName);
-            } else {
-                System.out.println("Successfully loaded from file: " + fileName);
             }
         } catch (Exception e) {
             System.out.println("Error while loading from file: " + fileName);

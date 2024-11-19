@@ -101,8 +101,6 @@ public class OwnerManager implements RentalManager<Owner> {
             owners = ownerDAO.readFromFile();
             if (owners.isEmpty()) {
                 System.out.println("No owner data found in file: " + fileName);
-            } else {
-                System.out.println("Successfully loaded from file: " + fileName);
             }
         } catch (Exception e) {
             System.out.println("Error while reading from file: " + fileName);

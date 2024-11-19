@@ -102,8 +102,6 @@ public class HostManager implements RentalManager<Host> {
             hosts = hostDAO.readFromFile();
             if (hosts.isEmpty()) {
                 System.out.println("No host data found in file: " + fileName);
-            } else {
-                System.out.println("Successfully loaded from file: " + fileName);
             }
         } catch (Exception e) {
             System.out.println("Error while reading from file: " + fileName);

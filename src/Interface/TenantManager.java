@@ -105,8 +105,6 @@ public class TenantManager implements RentalManager<Tenant> {
             tenants = tenantDAO.readFromFile();
             if (tenants.isEmpty()) {
                 System.out.println("No tenant data found in file: " + fileName);
-            } else {
-                System.out.println("Successfully loaded from file: " + fileName);
             }
         } catch (Exception e) {
             System.out.println("Error while reading from file: " + fileName);

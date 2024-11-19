@@ -95,8 +95,6 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
             agreements = rentalAgreementDAO.readFromFile();
             if (agreements.isEmpty()) {
                 System.out.println("No rental agreement data found in file: " + fileName);
-            } else {
-                System.out.println("Successfully loaded from file: " + fileName);
             }
         } catch (Exception e) {
             System.out.println("Error while reading from file: " + fileName);

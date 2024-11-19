@@ -1,12 +1,18 @@
 package DAO;
 
 import Classes.*;
+import Interface.HostManager;
+import Interface.OwnerManager;
+import Interface.TenantManager;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class RentalAgreementDAO {
-
+    private static final OwnerManager ownerManager = new OwnerManager();
+    private static final TenantManager tenantManager = new TenantManager();
+    private static final HostManager hostManager = new HostManager();
     private static final String FILE_PATH = "src/File/rental_agreements.txt";
 
     // Convert RentalAgreement object to String for file writing
@@ -35,8 +41,12 @@ public class RentalAgreementDAO {
         }
 
         String contractId = parts[0];
-        Owner owner = new Owner(parts[1]);
-        Tenant mainTenant = new Tenant(parts[2]);
+        ownerManager.loadFromFile("src/File/owners.txt");
+        Owner owner = ownerManager.getOne(parts[1]);
+
+        tenantManager.loadFromFile("src/File/tenants.txt");
+        Tenant mainTenant = tenantManager.getOne(parts[2]);
+
         List<Tenant> subTenants = convertStringToSubTenants(parts[3]);
         Property rentedProperty = convertStringToProperty(parts[4]);
         List<Host> hosts = convertStringToHosts(parts[5]);
@@ -112,9 +122,17 @@ public class RentalAgreementDAO {
     private List<Tenant> convertStringToSubTenants(String subTenantsString) {
         List<Tenant> subTenants = new ArrayList<>();
         String[] ids = subTenantsString.split(";");
+
+        tenantManager.loadFromFile("src/File/tenants.txt"); // Load danh sách Tenant từ file
+
         for (String id : ids) {
             if (!id.isEmpty()) {
-                subTenants.add(new Tenant(id));
+                Tenant tenant = tenantManager.getOne(id); // Lấy đối tượng Tenant đầy đủ từ TenantManager
+                if (tenant != null) {
+                    subTenants.add(tenant);
+                } else {
+                    System.err.println("SubTenant not found for ID: " + id);
+                }
             }
         }
         return subTenants;
@@ -133,9 +151,17 @@ public class RentalAgreementDAO {
     private List<Host> convertStringToHosts(String hostsString) {
         List<Host> hosts = new ArrayList<>();
         String[] ids = hostsString.split(";");
+
+        hostManager.loadFromFile("src/File/hosts.txt"); // Load danh sách Host từ file
+
         for (String id : ids) {
             if (!id.isEmpty()) {
-                hosts.add(new Host(id));
+                Host host = hostManager.getOne(id); // Lấy đối tượng Host đầy đủ từ HostManager
+                if (host != null) {
+                    hosts.add(host);
+                } else {
+                    System.err.println("Host not found for ID: " + id);
+                }
             }
         }
         return hosts;

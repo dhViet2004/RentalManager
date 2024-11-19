@@ -39,14 +39,13 @@ public class ResidentialProperty extends Property {
 
     @Override
     public String toString() {
-        return "ResidentialProperty{" +
-                "propertyId='" + getPropertyId() + '\'' +
-                ", address='" + getAddress() + '\'' +
-                ", pricing=" + getPricing() +
-                ", status=" + getStatus() + // Hiển thị status từ lớp cha
-                ", numBedrooms=" + numBedrooms +
-                ", gardenAvailability=" + gardenAvailability +
-                ", petFriendliness=" + petFriendliness +
-                '}';
+        return  "|      ResidentialProperty" + "\n" +
+                "|      PropertyId: " + getPropertyId() + "\n" +
+                "|      Address: " + getAddress() + "\n" +
+                "|      Pricing: " + getPricing() + "\n" +
+                "|      Status=" + getStatus() + "\n" +
+                "|      NumBedrooms: " + numBedrooms + "\n" +
+                "|      GardenAvailability: " + gardenAvailability + "\n" +
+                "|      PetFriendliness: " + petFriendliness;
     }
 }

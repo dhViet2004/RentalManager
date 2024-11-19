@@ -2,6 +2,8 @@ package DAO;
 
 import Classes.Payment;
 import Classes.Tenant;
+import Interface.TenantManager;
+
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,6 +11,7 @@ import java.util.*;
 
 public class PaymentDAO {
 
+    private static final TenantManager tenantManager = new TenantManager();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private static final String FILE_PATH = "src/File/payments.txt";  // Đường dẫn đến tệp lưu trữ thanh toán
 
@@ -16,7 +19,7 @@ public class PaymentDAO {
     private String convertPaymentToString(Payment payment) {
         return String.join(",",
                 payment.getPaymentId(),
-                payment.getTenant().getId(), // Only save Tenant ID
+                payment.getTenant().getId(), // Save Tenant ID
                 String.valueOf(payment.getAmount()),
                 dateFormat.format(payment.getDate()),
                 payment.getPaymentMethod()
@@ -37,8 +40,14 @@ public class PaymentDAO {
         Date date = dateFormat.parse(parts[3]);
         String paymentMethod = parts[4];
 
-        // Create a Tenant with only the ID
-        Tenant tenant = new Tenant(tenantId); // Create Tenant with just ID
+        // Load Tenant from file using TenantManager
+        tenantManager.loadFromFile("src/File/tenants.txt");
+        Tenant tenant = tenantManager.getOne(tenantId); // Get Tenant by ID
+
+        if (tenant == null) {
+            System.err.println("Tenant not found for ID: " + tenantId);
+            return null;
+        }
 
         return new Payment(paymentMethod, date, amount, tenant, paymentId);
     }
@@ -55,11 +64,11 @@ public class PaymentDAO {
         }
     }
 
+    // Read payments from file
     public List<Payment> readFromFile() {
         List<Payment> payments = new ArrayList<>();
         File file = new File(FILE_PATH);  // Kiểm tra file tồn tại hay không
 
-        // Nếu file không tồn tại, yêu cầu người dùng tạo file mới
         if (!file.exists()) {
             System.out.println("File Payment không tồn tại.");
             System.out.print("Bạn có muốn tạo file mới không? (yes/no): ");
@@ -72,7 +81,6 @@ public class PaymentDAO {
             }
         }
 
-        // Đọc dữ liệu từ file nếu file tồn tại
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -125,6 +133,7 @@ public class PaymentDAO {
             return false;
         }
     }
+
     // Delete payment by paymentId and update the file
     public boolean delete(String paymentId) {
         List<Payment> payments = readFromFile(); // Đọc danh sách thanh toán từ file

@@ -156,18 +156,44 @@ public class RentalAgreement implements Comparable<RentalAgreement> {
 
     @Override
     public String toString() {
-        return "RentalAgreement{" +
-                "contractId='" + contractId + '\'' +
-                ", owner=" + owner.getFullName() +
-                ", mainTenant=" + mainTenant.getFullName() +
-                ", subTenants=" + subTenants +
-                ", rentedProperty=" + rentedProperty +
-                ", hosts=" + hosts +
-                ", rentalCycle=" + rentalCycle +
-                ", duration=" + duration +
-                ", contractTerms='" + contractTerms + '\'' +
-                ", rentalFee=" + rentalFee +
-                ", status=" + status +
-                '}';
+        // Chuỗi fullname của từng subTenant
+        StringBuilder subTenantsNames = new StringBuilder();
+        if (subTenants != null && !subTenants.isEmpty()) {
+            for (Tenant tenant : subTenants) {
+                subTenantsNames.append(tenant.getFullName()).append(", ");
+            }
+            // Xóa dấu phẩy cuối cùng
+            if (subTenantsNames.length() > 0) {
+                subTenantsNames.setLength(subTenantsNames.length() - 2);
+            }
+        } else {
+            subTenantsNames.append("Không có");
+        }
+
+        // Chuỗi fullname của từng host
+        StringBuilder hostsNames = new StringBuilder();
+        if (hosts != null && !hosts.isEmpty()) {
+            for (Host host : hosts) {
+                hostsNames.append(host.getFullName()).append(", ");
+            }
+            // Xóa dấu phẩy cuối cùng
+            if (hostsNames.length() > 0) {
+                hostsNames.setLength(hostsNames.length() - 2);
+            }
+        } else {
+            hostsNames.append("Không có");
+        }
+
+        return  "| ContractId: " + contractId + "\n"+
+                "| FullName_Owner: " + owner.getFullName() + "\n" +
+                "| MainTenant: " + mainTenant.getFullName() + " | SubTenants: " + subTenantsNames + "\n" +
+                "| RentedProperty: "+ "\n" + rentedProperty + "\n" +
+                "| Hosts: " + hostsNames + "\n" +
+                "| rentalCycle: " + rentalCycle + "\n" +
+                "| duration: " + duration +
+                "| contractTerms: " + contractTerms + "\n" +
+                "| rentalFee: " + rentalFee + "\n" +
+                "| status: " + status;
     }
+
 }
