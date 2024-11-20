@@ -160,7 +160,7 @@ public class Main_RentalManager {
     private static void rentalAgreementMenu() {
         int choice;
         do {
-            displaySubMenu("Hợp đồng thuê");
+            displaySubMenuRA("Hợp đồng thuê");
             System.out.print("Nhập lựa chọn của bạn: ");
             choice = Integer.parseInt(scanner.nextLine());
             switch (choice) {
@@ -168,12 +168,25 @@ public class Main_RentalManager {
                 case 2 -> removeRentalAgreement();
                 case 3 -> updateRentalAgreement();
                 case 4 -> displayRentalAgreements();
-                case 5 -> System.out.println("Quay lại menu chính.");
+                case 5 -> getByOwnerName();
+                case 6 -> getByPropertyAddress();
+                case 7 -> getByStatus();
+                case 8 -> System.out.println("Quay lại menu chính.");
                 default -> System.out.println("Lựa chọn không hợp lệ. Vui lòng chọn lại.");
             }
-        } while (choice != 5);
+        } while (choice != 8);
     }
-
+    private static void displaySubMenuRA(String entity) {
+        System.out.printf("\n-------- MENU QUẢN LÝ %s --------\n", entity.toUpperCase());
+        System.out.println("    1. Thêm " + entity);
+        System.out.println("    2. Xóa " + entity);
+        System.out.println("    3. Cập nhật " + entity);
+        System.out.println("    4. Hiển thị danh sách " + entity);
+        System.out.println("    5. Get by Owner " + entity);
+        System.out.println("    6. Get by Property Address " + entity);
+        System.out.println("    7. Get by Status " + entity);
+        System.out.println("    8. Quay lại menu chính");
+    }
     private static void displaySubMenu(String entity) {
         System.out.printf("\n-------- MENU QUẢN LÝ %s --------\n", entity.toUpperCase());
         System.out.println("    1. Thêm " + entity);
@@ -1049,7 +1062,48 @@ public class Main_RentalManager {
             System.out.println(property.toString());
         }
     }
+    private  static void getByOwnerName() {
+        System.out.println("\nNhập OwnerName: ");
+        String ownerNameStr = scanner.nextLine();
+        List<RentalAgreement> listR = rentalAgreementManager.getByOwnerName(ownerNameStr);
+        for (RentalAgreement rentalAgreement : listR) {
+            System.out.println(rentalAgreement.toString());
+            System.out.println("---------------------------------------------------------");
+        }
+    }
+    private static void getByPropertyAddress() {
+        System.out.println("\nNhập Property Address: ");
+        String propertyAddressStr = scanner.nextLine();
+        List<RentalAgreement> listR = rentalAgreementManager.getByPropertyAddress(propertyAddressStr);
+        if (listR.isEmpty()) {
+            System.out.println("Không tìm thấy hợp đồng nào với địa chỉ bất động sản: " + propertyAddressStr);
+        } else {
+            for (RentalAgreement rentalAgreement : listR) {
+                System.out.println(rentalAgreement.toString());
+                System.out.println("---------------------------------------------------------");
+            }
+        }
+    }
+    private static void getByStatus() {
+        System.out.println("\nNhập trạng thái hợp đồng (NEW, ACTIVE, COMPLETED): ");
+        String statusStr = scanner.nextLine().toUpperCase();
 
+        try {
+            RentalAgreement.RentalAgreementStatus status = RentalAgreement.RentalAgreementStatus.valueOf(statusStr);
+            List<RentalAgreement> listR = rentalAgreementManager.getByStatus(status);
+
+            if (listR.isEmpty()) {
+                System.out.println("Không tìm thấy hợp đồng nào với trạng thái: " + status);
+            } else {
+                for (RentalAgreement rentalAgreement : listR) {
+                    System.out.println(rentalAgreement.toString());
+                    System.out.println("---------------------------------------------------------");
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Trạng thái không hợp lệ. Vui lòng nhập lại (NEW, ACTIVE, COMPLETED).");
+        }
+    }
     private static void displayRentalAgreements() {
         System.out.println("\nDanh sách hợp đồng thuê hiện tại:");
         for (RentalAgreement agreement : rentalAgreementManager.getAll()) {

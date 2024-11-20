@@ -260,4 +260,41 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
         }
         return rentalAgreement;
     }
+    public List<RentalAgreement> getByOwnerName(String ownerName) {
+        List<RentalAgreement> result = new ArrayList<>();
+        for (RentalAgreement agreement : agreements) {
+            if (agreement.getOwner().getFullName().equalsIgnoreCase(ownerName)) {
+                result.add(agreement);
+            }
+        }
+        if (result.isEmpty()) {
+            System.out.println("No rental agreements found for owner name: " + ownerName);
+        }
+        return result;
+    }
+    // Lấy danh sách hợp đồng theo địa chỉ bất động sản
+    public List<RentalAgreement> getByPropertyAddress(String propertyAddress) {
+        List<RentalAgreement> result = new ArrayList<>();
+        for (RentalAgreement agreement : agreements) {
+            if (agreement.getRentedProperty().getAddress().equalsIgnoreCase(propertyAddress)) {
+                result.add(agreement);
+            }
+        }
+        if (result.isEmpty()) {
+            System.out.println("No rental agreements found for property address: " + propertyAddress);
+        }
+        return result;
+    }
+    public List<RentalAgreement> getByStatus(RentalAgreement.RentalAgreementStatus status) {
+        List<RentalAgreement> result = new ArrayList<>();
+        for (RentalAgreement agreement : agreements) {
+            if (agreement.getStatus() == status) {
+                result.add(agreement);
+            }
+        }
+        if (result.isEmpty()) {
+            System.out.println("No rental agreements found with status: " + status);
+        }
+        return result;
+    }
 }
