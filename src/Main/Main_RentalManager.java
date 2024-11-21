@@ -1054,12 +1054,14 @@ public class Main_RentalManager {
         System.out.println("\nDanh sách bất động sản dân dụng hiện tại:");
         for (ResidentialProperty property : residentialPropertyManager.getAll()) {
             System.out.println(property.toString());
+            System.out.println("---------------------------------------------------------");
         }
     }
     private static void displayCommercialProperties() {
         System.out.println("\nDanh sách bất động sản thương mại hiện tại:");
         for (CommercialProperty property : commercialPropertyManager.getAll()) {
             System.out.println(property.toString());
+            System.out.println("---------------------------------------------------------");
         }
     }
     private  static void getByOwnerName() {

@@ -3,3 +3,13 @@
 4,1,3,3;,CommercialProperty;1;Ben Tre;12.0;AVAILABLE;Office;1;1.0,1;,DAILY,1,hoang,123456.0,ACTIVE
 5,1,1,1;,CommercialProperty;1;Ben Tre;12.0;AVAILABLE;Office;1;1.0,1;,WEEKLY,1,no,1234455.0,NEW
 1,1,1,1;,CommercialProperty;1;Ben Tre;12.0;AVAILABLE;Office;1;1.0,1;,DAILY,1,no,1234.0,NEW
+6,11,11,11;,CommercialProperty;11;Quang Ninh;1.2E9;RENTED;Retail;4;130.0,1;2;3;4;5;6;7;8;9;10;11;,DAILY,10,studio@gmail.com,1000000.0,NEW
+7,7,7,7;,ResidentialProperty;7;Vung Tau;500000.0;AVAILABLE;3;true;true,7;,YEARLY,1,dalat@gmail.com,1.0E7,NEW
+8,8,8,8;,ResidentialProperty;10;Thanh Hoa;700000.0;RENTED;10;true;false,8;9;,MONTHLY,12,no infor,1.0E7,ACTIVE
+9,10,10,1;2;,ResidentialProperty;11;Quang Ninh;250000.0;AVAILABLE;2;false;true,3;6;,MONTHLY,1,dviet037@gmail.com,1000000.0,COMPLETED
+10,10,1,15;,CommercialProperty;15;Quang Nam;2.7E7;RENTED;Office;9;140.0,15;,DAILY,2,023455679,200000.0,NEW
+11,1,14,13;14;,CommercialProperty;15;Quang Nam;2.7E7;RENTED;Office;9;140.0,15;,MONTHLY,1,09876553523,9.0E7,NEW
+12,1,15,11;,CommercialProperty;10;Nha Trang;5.0E7;AVAILABLE;Warehouse;2;180.0,14;,FORTNIGHTLY,1,0348946834,4.0E7,NEW
+13,1,13,3;,CommercialProperty;12;Thanh Hoa;4.5E8;AVAILABLE;Office;7;110.0,5;,YEARLY,2,04985464342,2000000.0,NEW
+14,1,1,1;,ResidentialProperty;12;Dong Nai;540000.0;RENTED;11;true;false,1;,DAILY,2,0345644232,6.0E7,NEW
+15,1,15,14;,CommercialProperty;1;Ben Tre;12.0;AVAILABLE;Office;1;1.0,13;,WEEKLY,1,09423482352,9.99E8,NEW

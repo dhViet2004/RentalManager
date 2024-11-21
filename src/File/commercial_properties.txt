@@ -1,1 +1,15 @@
 1,Ben Tre,12.0,AVAILABLE,Office,1,1.0
+2,Ho Chi Minh,4.0E8,RENTED,Retail,3,100.0
+3,Go Vap,9.0E9,AVAILABLE,Office,10,100.0
+4,Ha Noi,3.5E7,RENTED,Office,5,50.0
+5,Da Nang,1.0E8,AVAILABLE,Retail,2,75.0
+6,Binh Duong,8.0E7,AVAILABLE,Warehouse,4,200.0
+7,Can Tho,2.5E9,RENTED,Office,8,150.0
+8,Vung Tau,7.0E7,AVAILABLE,Retail,3,80.0
+9,Long An,6.5E8,RENTED,Office,6,120.0
+10,Nha Trang,5.0E7,AVAILABLE,Warehouse,2,180.0
+11,Quang Ninh,1.2E9,RENTED,Retail,4,130.0
+12,Thanh Hoa,4.5E8,AVAILABLE,Office,7,110.0
+13,Bac Giang,9.8E7,RENTED,Retail,5,95.0
+14,Dong Nai,3.0E8,AVAILABLE,Warehouse,6,170.0
+15,Quang Nam,2.7E7,RENTED,Office,9,140.0
