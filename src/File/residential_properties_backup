@@ -13,5 +13,5 @@
 13,Quang Nam,370000.0,AVAILABLE,1,true,true
 14,Bac Giang,910000.0,RENTED,8,false,false
 15,Bac Ninh,640000.0,AVAILABLE,3,false,true
-20,Ben Tre,1.0E7,AVAILABLE,3,true,true
 18,Ca Mau,3000000.0,RENTED,3,true,true
+20,Ben Tre,1.0E7,AVAILABLE,3,true,true

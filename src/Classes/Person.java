@@ -1,5 +1,6 @@
 package Classes;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -67,11 +68,12 @@ public abstract class Person {
 
     @Override
     public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         return "Person{" +
-                "id='" + id + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", contactInfo='" + contactInfo + '\'' +
+                "id: " + id + '\'' +
+                "| fullName: " + fullName + '\'' +
+                "| dateOfBirth: " + dateFormat.format(dateOfBirth) +
+                "| contactInfo: " + contactInfo + '\'' +
                 '}';
     }
 }

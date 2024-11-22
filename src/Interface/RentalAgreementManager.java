@@ -11,6 +11,7 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
     private RentalAgreementDAO rentalAgreementDAO = new RentalAgreementDAO(); // Tạo đối tượng RentalAgreementDAO để lưu và tải từ file
     private TenantManager tenantManager = new TenantManager();
     private HostManager hostManager = new HostManager();
+    private static String FILE_PATH = "src/File/rental_agreements.txt";
     @Override
     public boolean add(RentalAgreement item) {
         if (agreements.contains(item)) {
@@ -81,7 +82,7 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
     @Override
     public void saveToFile(String fileName) {
         try {
-            rentalAgreementDAO.writeToFile(agreements);
+            rentalAgreementDAO.writeToFile(agreements,FILE_PATH);
             System.out.println("Successfully saved to file: " + fileName);
         } catch (Exception e) {
             System.out.println("Error while saving to file: " + fileName);
@@ -297,4 +298,33 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
         }
         return result;
     }
+    public void sortRentalAgreementsById() {
+        agreements.sort((a1, a2) -> {
+            try {
+                // Chuyển đổi contractId sang số nếu có thể để sắp xếp
+                int id1 = Integer.parseInt(a1.getContractId());
+                int id2 = Integer.parseInt(a2.getContractId());
+                return Integer.compare(id1, id2);
+            } catch (NumberFormatException e) {
+                // Nếu không phải số, so sánh chuỗi
+                return a1.getContractId().compareTo(a2.getContractId());
+            }
+        });
+        System.out.println("Danh sách Rental Agreements đã được sắp xếp theo contractId (tăng dần).");
+    }
+    public void saveRentalAgreementsBackupToFile(String backupFileName) {
+        if (backupFileName == null || backupFileName.isEmpty()) {
+            System.out.println("Tên file backup không hợp lệ.");
+            return;
+        }
+
+        try {
+            rentalAgreementDAO.writeToFile(agreements,backupFileName);
+            System.out.println("Danh sách Rental Agreements đã được lưu vào file backup: " + backupFileName);
+        } catch (Exception e) {
+            System.out.println("Lỗi khi lưu file backup: " + backupFileName);
+            e.printStackTrace();
+        }
+    }
+
 }

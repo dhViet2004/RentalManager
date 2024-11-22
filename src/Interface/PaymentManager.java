@@ -12,6 +12,7 @@ public class PaymentManager implements RentalManager<Payment> {
     private List<Payment> payments = new ArrayList<>();
     private PaymentDAO paymentDAO = new PaymentDAO(); // Create PaymentDAO object to save and load from file
     private TenantManager tenantManager = new TenantManager();
+    private static String FILE_PATH = "src/File/payments.txt";
     @Override
     public boolean add(Payment item) {
         Payment temp = new Payment(item.getPaymentMethod(), item.getDate(), item.getAmount(), item.getTenant(), item.getPaymentId());
@@ -87,7 +88,7 @@ public class PaymentManager implements RentalManager<Payment> {
     public void saveToFile(String fileName) {
         try {
             // Call PaymentDAO to save the payment list to a file
-            paymentDAO.writeToFile(payments);
+            paymentDAO.writeToFile(payments,FILE_PATH);
             System.out.println("Successfully saved to file: " + fileName);
         } catch (Exception e) {
             System.out.println("Error while saving to file: " + fileName);
@@ -160,5 +161,37 @@ public class PaymentManager implements RentalManager<Payment> {
 
         return payment; // Trả về đối tượng Payment đã tạo
     }
+    // Sắp xếp Payments theo ID (tăng dần)
+    public void sortPaymentsById() {
+        payments.sort((p1, p2) -> {
+            try {
+                // Chuyển đổi ID sang số nếu có thể để sắp xếp
+                int id1 = Integer.parseInt(p1.getPaymentId());
+                int id2 = Integer.parseInt(p2.getPaymentId());
+                return Integer.compare(id1, id2);
+            } catch (NumberFormatException e) {
+                // Nếu không phải số, so sánh chuỗi
+                return p1.getPaymentId().compareTo(p2.getPaymentId());
+            }
+        });
+        System.out.println("Danh sách Payments đã được sắp xếp theo ID (tăng dần).");
+    }
+
+    // Lưu danh sách Payments vào file backup
+    public void saveBackupToFile(String backupFileName) {
+        if (backupFileName == null || backupFileName.isEmpty()) {
+            System.out.println("Tên file backup không hợp lệ.");
+            return;
+        }
+
+        try {
+            paymentDAO.writeToFile(payments, backupFileName);
+            System.out.println("Danh sách Payments đã được lưu vào file backup: " + backupFileName);
+        } catch (Exception e) {
+            System.out.println("Lỗi khi lưu file backup: " + backupFileName);
+            e.printStackTrace();
+        }
+    }
+
 
 }

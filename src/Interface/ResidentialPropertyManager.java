@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class ResidentialPropertyManager implements RentalManager<ResidentialProperty> {
     private List<ResidentialProperty> properties = new ArrayList<>();
     private ResidentialPropertyDAO propertyDAO = new ResidentialPropertyDAO(); // DAO để ghi và đọc từ file
-
+    private static String FILE_PATH = "src/File/residential_properties.txt";
     @Override
     public boolean add(ResidentialProperty item) {
         if (properties.stream().anyMatch(p -> p.getPropertyId().equals(item.getPropertyId()))) {
@@ -78,7 +78,7 @@ public class ResidentialPropertyManager implements RentalManager<ResidentialProp
     @Override
     public void saveToFile(String fileName) {
         try {
-            propertyDAO.writeToFile(properties);
+            propertyDAO.writeToFile(properties,FILE_PATH);
             System.out.println("Successfully saved to file: " + fileName);
         } catch (Exception e) {
             System.out.println("Error while saving to file: " + fileName);
@@ -147,4 +147,35 @@ public class ResidentialPropertyManager implements RentalManager<ResidentialProp
 
         return property;
     }
+    // Sắp xếp Residential Properties theo propertyId (tăng dần)
+    public void sortPropertiesById() {
+        properties.sort((p1, p2) -> {
+            try {
+                // Chuyển propertyId sang số để so sánh nếu có thể
+                int id1 = Integer.parseInt(p1.getPropertyId());
+                int id2 = Integer.parseInt(p2.getPropertyId());
+                return Integer.compare(id1, id2);
+            } catch (NumberFormatException e) {
+                // Nếu propertyId không phải số, sử dụng so sánh chuỗi
+                return p1.getPropertyId().compareTo(p2.getPropertyId());
+            }
+        });
+        System.out.println("Danh sách Residential Properties đã được sắp xếp theo propertyId (tăng dần).");
+    }
+    // Lưu danh sách Residential Properties vào file backup
+    public void saveBackupToFile(String backupFileName) {
+        if (backupFileName == null || backupFileName.isEmpty()) {
+            System.out.println("Tên file backup không hợp lệ.");
+            return;
+        }
+
+        try {
+            propertyDAO.writeToFile(properties, backupFileName);  // Ghi danh sách properties vào file
+            System.out.println("Danh sách Residential Properties đã được lưu vào file backup: " + backupFileName);
+        } catch (Exception e) {
+            System.out.println("Lỗi khi lưu file backup: " + backupFileName);
+            e.printStackTrace();
+        }
+    }
+
 }

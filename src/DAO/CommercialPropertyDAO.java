@@ -85,7 +85,7 @@ public class CommercialPropertyDAO {
         }
     }
 
-    public void writeToFile(List<CommercialProperty> properties) {
+    public void writeToFile(List<CommercialProperty> properties, String FILE_PATH) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (CommercialProperty property : properties) {
                 writer.write(convertToString(property));
@@ -99,7 +99,7 @@ public class CommercialPropertyDAO {
     public void addProperty(CommercialProperty property) {
         List<CommercialProperty> properties = readFromFile();
         properties.add(property);
-        writeToFile(properties);
+        writeToFile(properties,FILE_PATH);
         System.out.println("Commercial property added successfully.");
     }
 
@@ -116,7 +116,7 @@ public class CommercialPropertyDAO {
         }
 
         if (updated) {
-            writeToFile(properties);
+            writeToFile(properties,FILE_PATH);
             System.out.println("Commercial property updated successfully.");
         } else {
             System.out.println("Property not found.");
@@ -129,7 +129,7 @@ public class CommercialPropertyDAO {
         boolean removed = properties.removeIf(property -> property.getPropertyId().equals(propertyId));
 
         if (removed) {
-            writeToFile(properties);
+            writeToFile(properties,FILE_PATH);
             System.out.println("Commercial property deleted successfully.");
         } else {
             System.out.println("Property not found.");

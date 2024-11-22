@@ -41,7 +41,7 @@ public class OwnerDAO {
     }
 
     // Write a list of owners to a file (overwrite file content)
-    public void writeToFile(List<Owner> owners) {
+    public void writeToFile(List<Owner> owners,String FILE_PATH) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Owner owner : owners) {
                 writer.write(convertOwnerToString(owner));
@@ -111,7 +111,7 @@ public class OwnerDAO {
         }
 
         if (ownerFound) {
-            writeToFile(owners);
+            writeToFile(owners,FILE_PATH);
             System.out.println("Owner updated successfully!");
             return true;
         } else {
@@ -136,7 +136,7 @@ public class OwnerDAO {
         }
 
         if (ownerFound) {
-            writeToFile(owners);
+            writeToFile(owners,FILE_PATH);
             System.out.println("Owner deleted successfully!");
             return true;
         } else {

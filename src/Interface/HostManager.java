@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class HostManager implements RentalManager<Host> {
     private List<Host> hosts = new ArrayList<>();
     private HostDAO hostDAO = new HostDAO(); // DAO cho việc lưu và tải dữ liệu từ file
-
+    private static String FilePath = "src/File/hosts.txt";
     @Override
     public boolean add(Host item) {
         // Kiểm tra xem hostId đã tồn tại chưa
@@ -87,7 +87,7 @@ public class HostManager implements RentalManager<Host> {
     public void saveToFile(String fileName) {
         try {
             // Gọi HostDAO để lưu danh sách Host vào file
-            hostDAO.writeToFile(hosts);
+            hostDAO.writeToFile(hosts,FilePath);
             System.out.println("Successfully saved to file: " + fileName);
         } catch (Exception e) {
             System.out.println("Error while saving to file: " + fileName);
@@ -146,4 +146,40 @@ public class HostManager implements RentalManager<Host> {
 
         return host;
     }
+
+    // Sort hosts by ID in ascending order
+    public void sortHostsById() {
+        hosts.sort((h1, h2) -> {
+            try {
+                // Chuyển đổi ID sang số để so sánh nếu có thể
+                int id1 = Integer.parseInt(h1.getId());
+                int id2 = Integer.parseInt(h2.getId());
+                return Integer.compare(id1, id2);
+            } catch (NumberFormatException e) {
+                // Nếu ID không phải số, dùng so sánh chuỗi
+                return h1.getId().compareTo(h2.getId());
+            }
+        });
+        System.out.println("Danh sách Hosts đã được sắp xếp theo ID (tăng dần).");
+    }
+
+
+    // Save hosts to a backup file
+    public void saveBackupToFile(String backupFileName) {
+        if (backupFileName == null || backupFileName.isEmpty()) {
+            System.out.println("Tên file backup không hợp lệ.");
+            return;
+        }
+
+        try {
+            hostDAO.writeToFile(hosts, backupFileName);
+            System.out.println("Danh sách Hosts đã được lưu vào file backup: " + backupFileName);
+        } catch (Exception e) {
+            System.out.println("Lỗi khi lưu file backup: " + backupFileName);
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

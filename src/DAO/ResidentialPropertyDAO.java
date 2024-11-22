@@ -85,7 +85,7 @@ public class ResidentialPropertyDAO {
         }
     }
 
-    public void writeToFile(List<ResidentialProperty> properties) {
+    public void writeToFile(List<ResidentialProperty> properties, String FILE_PATH) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (ResidentialProperty property : properties) {
                 writer.write(convertToString(property));
@@ -99,7 +99,7 @@ public class ResidentialPropertyDAO {
     public void addProperty(ResidentialProperty property) {
         List<ResidentialProperty> properties = readFromFile();
         properties.add(property);
-        writeToFile(properties);
+        writeToFile(properties,FILE_PATH);
         System.out.println("Residential property added successfully.");
     }
 
@@ -116,7 +116,7 @@ public class ResidentialPropertyDAO {
         }
 
         if (updated) {
-            writeToFile(properties);
+            writeToFile(properties,FILE_PATH);
             System.out.println("Residential property updated successfully.");
         } else {
             System.out.println("Property not found.");
@@ -129,7 +129,7 @@ public class ResidentialPropertyDAO {
         boolean removed = properties.removeIf(property -> property.getPropertyId().equals(propertyId));
 
         if (removed) {
-            writeToFile(properties);
+            writeToFile(properties,FILE_PATH);
             System.out.println("Residential property deleted successfully.");
         } else {
             System.out.println("Property not found.");

@@ -40,7 +40,7 @@ public class TenantDAO {
     }
 
     // Write a list of tenants to a file (overwrite file content)
-    public void writeToFile(List<Tenant> tenants) {
+    public void writeToFile(List<Tenant> tenants, String FILE_PATH) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Tenant tenant : tenants) {
                 writer.write(convertTenantToString(tenant));
@@ -114,7 +114,7 @@ public class TenantDAO {
 
         if (tenantFound) {
             // Ghi lại danh sách tenant đã cập nhật vào file
-            writeToFile(tenants);
+            writeToFile(tenants, FILE_PATH);
             System.out.println("Tenant updated successfully!");
             return true;
         } else {
@@ -140,7 +140,7 @@ public class TenantDAO {
 
         if (tenantFound) {
             // Ghi lại danh sách tenant sau khi xóa vào file
-            writeToFile(tenants);
+            writeToFile(tenants, FILE_PATH);
             System.out.println("Tenant deleted successfully!");
             return true;
         } else {

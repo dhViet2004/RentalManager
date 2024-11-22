@@ -5,13 +5,14 @@ import DAO.TenantDAO;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 public class TenantManager implements RentalManager<Tenant> {
     private List<Tenant> tenants = new ArrayList<>();
     private TenantDAO tenantDAO = new TenantDAO(); // DAO cho việc lưu và tải dữ liệu từ file
-
+    private static String FilePath = "src/File/tenants.txt";
     @Override
     public boolean add(Tenant item) {
         // Kiểm tra xem tenantId đã tồn tại chưa
@@ -90,7 +91,7 @@ public class TenantManager implements RentalManager<Tenant> {
     public void saveToFile(String fileName) {
         try {
             // Gọi TenantDAO để lưu danh sách Tenant vào file
-            tenantDAO.writeToFile(tenants);
+            tenantDAO.writeToFile(tenants,FilePath);
             System.out.println("Successfully saved to file: " + fileName);
         } catch (Exception e) {
             System.out.println("Error while saving to file: " + fileName);
@@ -149,5 +150,29 @@ public class TenantManager implements RentalManager<Tenant> {
 
         return tenant;
     }
+    public void sortTenantsById() {
+        tenants.sort((t1, t2) -> {
+            try {
+                int id1 = Integer.parseInt(t1.getId());
+                int id2 = Integer.parseInt(t2.getId());
+                return Integer.compare(id1, id2);
+            } catch (NumberFormatException e) {
+                // Nếu không thể chuyển đổi, so sánh chuỗi (phòng ngừa lỗi dữ liệu)
+                return t1.getId().compareTo(t2.getId());
+            }
+        });
+        System.out.println("Tenants sorted by ID in ascending order.");
+    }
+
+    public void saveBackupToFile(String backupFileName) {
+        try {
+            tenantDAO.writeToFile(tenants, backupFileName);
+            System.out.println("Backup saved successfully to file: " + backupFileName);
+        } catch (Exception e) {
+            System.out.println("Error while saving backup to file: " + backupFileName);
+            e.printStackTrace();
+        }
+    }
+
 
 }

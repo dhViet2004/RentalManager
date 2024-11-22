@@ -168,7 +168,7 @@ public class RentalAgreementDAO {
     }
 
     // Write a list of RentalAgreements to a file
-    public void writeToFile(List<RentalAgreement> agreements) {
+    public void writeToFile(List<RentalAgreement> agreements,String FILE_PATH) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (RentalAgreement agreement : agreements) {
                 writer.write(convertRentalAgreementToString(agreement));
@@ -217,7 +217,7 @@ public class RentalAgreementDAO {
         }
 
         if (agreementFound) {
-            writeToFile(agreements);
+            writeToFile(agreements,FILE_PATH);
             System.out.println("Rental Agreement updated successfully!");
             return true;
         } else {
@@ -242,7 +242,7 @@ public class RentalAgreementDAO {
         }
 
         if (agreementFound) {
-            writeToFile(agreements);
+            writeToFile(agreements,FILE_PATH);
             System.out.println("Rental Agreement deleted successfully!");
             return true;
         } else {

@@ -41,7 +41,7 @@ public class HostDAO {
     }
 
     // Write a list of hosts to a file (overwrite file content)
-    public void writeToFile(List<Host> hosts) {
+    public void writeToFile(List<Host> hosts, String FILE_PATH) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Host host : hosts) {
                 writer.write(convertHostToString(host));
@@ -111,7 +111,7 @@ public class HostDAO {
         }
 
         if (hostFound) {
-            writeToFile(hosts);
+            writeToFile(hosts,FILE_PATH);
             System.out.println("Host updated successfully!");
             return true;
         } else {
@@ -136,7 +136,7 @@ public class HostDAO {
         }
 
         if (hostFound) {
-            writeToFile(hosts);
+            writeToFile(hosts,FILE_PATH);
             System.out.println("Host deleted successfully!");
             return true;
         } else {

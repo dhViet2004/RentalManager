@@ -53,7 +53,7 @@ public class PaymentDAO {
     }
 
     // Write a list of payments to a file (overwrite file content)
-    public void writeToFile(List<Payment> payments) {
+    public void writeToFile(List<Payment> payments,String FILE_PATH) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Payment payment : payments) {
                 writer.write(convertPaymentToString(payment));
@@ -125,7 +125,7 @@ public class PaymentDAO {
 
         if (paymentFound) {
             // Ghi lại danh sách thanh toán đã cập nhật vào file
-            writeToFile(payments);
+            writeToFile(payments,FILE_PATH);
             System.out.println("Payment updated successfully!");
             return true;
         } else {
@@ -151,7 +151,7 @@ public class PaymentDAO {
 
         if (paymentFound) {
             // Ghi lại danh sách thanh toán sau khi xóa vào file
-            writeToFile(payments);
+            writeToFile(payments,FILE_PATH);
             System.out.println("Payment deleted successfully!");
             return true;
         } else {

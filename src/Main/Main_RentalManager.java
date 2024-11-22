@@ -477,9 +477,38 @@ public class Main_RentalManager {
     }
     // Quản lý Tenant
     private static void displayTenants() {
-        System.out.println("\nDanh sách tenants hiện tại:");
-        for (Tenant tenant : tenantManager.getAll()) {
-            System.out.println(tenant.toString());
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nDanh sách tenants hiện tại:");
+            for (Tenant tenant : tenantManager.getAll()) {
+                System.out.println(tenant.toString());
+            }
+
+            System.out.println("\nChọn một hành động:");
+            System.out.println("1. Sắp xếp tenants theo ID và hiển thị lại");
+            System.out.println("2. Lưu danh sách tenants vào file backup");
+            System.out.println("3. Quay lại menu chính");
+
+            System.out.print("Nhập lựa chọn của bạn: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Đọc bỏ ký tự xuống dòng
+
+            switch (choice) {
+                case 1:
+                    tenantManager.sortTenantsById();
+                    System.out.println("\nDanh sách tenants đã được sắp xếp theo ID:");
+                    break;
+                case 2:
+                    System.out.print("Nhập tên file backup (bao gồm đường dẫn nếu cần): ");
+                    String backupFileName = scanner.nextLine();
+                    tenantManager.saveBackupToFile(backupFileName);
+                    break;
+                case 3:
+                    System.out.println("Quay lại menu chính.");
+                    return; // Thoát khỏi hàm
+                default:
+                    System.out.println("Lựa chọn không hợp lệ! Vui lòng chọn lại.");
+            }
         }
     }
     private static void addNewTenant() {
@@ -674,17 +703,86 @@ public class Main_RentalManager {
         }
     }
     private static void displayPayments() {
-        System.out.println("\nDanh sách thanh toán hiện tại:");
-        for (Payment pm : paymentManager.getAll()) {
-            System.out.println(pm.toString());
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nDanh sách thanh toán hiện tại:");
+            for (Payment payment : paymentManager.getAll()) {
+                System.out.println(payment.toString());
+                System.out.println("---------------------------------------------------------");
+            }
+
+            // Menu lựa chọn
+            System.out.println("\nChọn một hành động:");
+            System.out.println("1. Sắp xếp Payments theo ID và hiển thị lại");
+            System.out.println("2. Lưu danh sách Payments vào file backup");
+            System.out.println("3. Quay lại menu chính");
+
+            System.out.print("Nhập lựa chọn của bạn: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Đọc bỏ ký tự xuống dòng
+
+            switch (choice) {
+                case 1:
+                    // Gọi phương thức sắp xếp danh sách Payments theo ID
+                    paymentManager.sortPaymentsById();
+                    System.out.println("\nDanh sách Payments đã được sắp xếp theo ID.");
+                    break;
+                case 2:
+                    // Yêu cầu nhập tên file backup và lưu danh sách Payments vào file
+                    System.out.print("Nhập tên file backup (bao gồm đường dẫn nếu cần): ");
+                    String backupFileName = scanner.nextLine();
+                    paymentManager.saveBackupToFile(backupFileName);
+                    System.out.println("Danh sách Payments đã được lưu vào file: " + backupFileName);
+                    break;
+                case 3:
+                    System.out.println("Quay lại menu chính.");
+                    return; // Thoát khỏi hàm
+                default:
+                    System.out.println("Lựa chọn không hợp lệ! Vui lòng chọn lại.");
+            }
         }
     }
+
     private static void displayHosts() {
-        System.out.println("\nDanh sách Host hiện tại:");
-        for (Host host : hostManager.getAll()) {
-            System.out.println(host.toString());
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nDanh sách Host hiện tại:");
+            for (Host host : hostManager.getAll()) {
+                System.out.println(host.toString());
+            }
+
+            // Menu lựa chọn
+            System.out.println("\nChọn một hành động:");
+            System.out.println("1. Sắp xếp Hosts theo ID và hiển thị lại");
+            System.out.println("2. Lưu danh sách Hosts vào file backup");
+            System.out.println("3. Quay lại menu chính");
+
+            System.out.print("Nhập lựa chọn của bạn: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Đọc bỏ ký tự xuống dòng
+
+            switch (choice) {
+                case 1:
+                    // Gọi phương thức sắp xếp danh sách Hosts theo ID
+                    hostManager.sortHostsById();
+                    System.out.println("\nDanh sách Hosts đã được sắp xếp theo ID:");
+                    break;
+                case 2:
+                    // Yêu cầu nhập tên file backup và lưu danh sách Hosts vào file
+                    System.out.print("Nhập tên file backup (bao gồm đường dẫn nếu cần): ");
+                    String backupFileName = scanner.nextLine();
+                    hostManager.saveBackupToFile(backupFileName);
+                    System.out.println("Danh sách Hosts đã được lưu vào file: " + backupFileName);
+                    break;
+                case 3:
+                    System.out.println("Quay lại menu chính.");
+                    return; // Thoát khỏi hàm
+                default:
+                    System.out.println("Lựa chọn không hợp lệ! Vui lòng chọn lại.");
+            }
         }
     }
+
 
     private static void addNewHost() {
         Host newHost = hostManager.inputHostData(); // Phương thức này cần được triển khai trong HostManager
@@ -763,11 +861,42 @@ public class Main_RentalManager {
         }
     }
     private static void displayOwners() {
-        System.out.println("\nDanh sách chủ sở hữu hiện tại:");
-        for (Owner owner : ownerManager.getAll()) {
-            System.out.println(owner.toString());
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nDanh sách chủ sở hữu hiện tại:");
+            for (Owner owner : ownerManager.getAll()) {
+                System.out.println(owner.toString());
+            }
+
+            // Menu lựa chọn
+            System.out.println("\nChọn một hành động:");
+            System.out.println("1. Sắp xếp chủ sở hữu theo ID và hiển thị lại");
+            System.out.println("2. Lưu danh sách chủ sở hữu vào file backup");
+            System.out.println("3. Quay lại menu chính");
+
+            System.out.print("Nhập lựa chọn của bạn: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Đọc bỏ ký tự xuống dòng
+
+            switch (choice) {
+                case 1:
+                    ownerManager.sortOwnersById();  // Sắp xếp theo ID
+                    System.out.println("\nDanh sách chủ sở hữu đã được sắp xếp theo ID:");
+                    break;
+                case 2:
+                    System.out.print("Nhập tên file backup (bao gồm đường dẫn nếu cần): ");
+                    String backupFileName = scanner.nextLine();
+                    ownerManager.saveBackupToFile(backupFileName);  // Lưu backup
+                    break;
+                case 3:
+                    System.out.println("Quay lại menu chính.");
+                    return;  // Quay lại menu chính
+                default:
+                    System.out.println("Lựa chọn không hợp lệ! Vui lòng chọn lại.");
+            }
         }
     }
+
 
     private static void addNewOwner() {
         Owner newOwner = ownerManager.inputOwnerData(); // Phương thức này cần được triển khai trong OwnerManager
@@ -1051,19 +1180,83 @@ public class Main_RentalManager {
         }
     }
     private static void displayResidentialProperties() {
-        System.out.println("\nDanh sách bất động sản dân dụng hiện tại:");
-        for (ResidentialProperty property : residentialPropertyManager.getAll()) {
-            System.out.println(property.toString());
-            System.out.println("---------------------------------------------------------");
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            // Hiển thị danh sách Residential Properties hiện tại
+            System.out.println("\nDanh sách bất động sản dân dụng hiện tại:");
+            for (ResidentialProperty property : residentialPropertyManager.getAll()) {
+                System.out.println(property.toString());
+                System.out.println("---------------------------------------------------------");
+            }
+
+            // Menu lựa chọn
+            System.out.println("\nChọn một hành động:");
+            System.out.println("1. Sắp xếp Residential Properties theo ID và hiển thị lại");
+            System.out.println("2. Lưu danh sách Residential Properties vào file backup");
+            System.out.println("3. Quay lại menu chính");
+
+            System.out.print("Nhập lựa chọn của bạn: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Đọc bỏ ký tự xuống dòng
+
+            switch (choice) {
+                case 1:
+                    residentialPropertyManager.sortPropertiesById();  // Sắp xếp theo ID
+                    System.out.println("\nDanh sách Residential Properties đã được sắp xếp theo ID.");
+                    break;
+                case 2:
+                    System.out.print("Nhập tên file backup (bao gồm đường dẫn nếu cần): ");
+                    String backupFileName = scanner.nextLine();
+                    residentialPropertyManager.saveBackupToFile(backupFileName);  // Lưu backup
+                    break;
+                case 3:
+                    System.out.println("Quay lại menu chính.");
+                    return;  // Quay lại menu chính
+                default:
+                    System.out.println("Lựa chọn không hợp lệ! Vui lòng chọn lại.");
+            }
         }
     }
+
     private static void displayCommercialProperties() {
-        System.out.println("\nDanh sách bất động sản thương mại hiện tại:");
-        for (CommercialProperty property : commercialPropertyManager.getAll()) {
-            System.out.println(property.toString());
-            System.out.println("---------------------------------------------------------");
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            // Hiển thị danh sách Commercial Properties hiện tại
+            System.out.println("\nDanh sách bất động sản thương mại hiện tại:");
+            for (CommercialProperty property : commercialPropertyManager.getAll()) {
+                System.out.println(property.toString());
+                System.out.println("---------------------------------------------------------");
+            }
+
+            // Menu lựa chọn
+            System.out.println("\nChọn một hành động:");
+            System.out.println("1. Sắp xếp Commercial Properties theo ID và hiển thị lại");
+            System.out.println("2. Lưu danh sách Commercial Properties vào file backup");
+            System.out.println("3. Quay lại menu chính");
+
+            System.out.print("Nhập lựa chọn của bạn: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Đọc bỏ ký tự xuống dòng
+
+            switch (choice) {
+                case 1:
+                    commercialPropertyManager.sortPropertiesById();  // Sắp xếp theo ID
+                    System.out.println("\nDanh sách Commercial Properties đã được sắp xếp theo ID.");
+                    break;
+                case 2:
+                    System.out.print("Nhập tên file backup (bao gồm đường dẫn nếu cần): ");
+                    String backupFileName = scanner.nextLine();
+                    commercialPropertyManager.saveBackupToFile(backupFileName);  // Lưu backup
+                    break;
+                case 3:
+                    System.out.println("Quay lại menu chính.");
+                    return;  // Quay lại menu chính
+                default:
+                    System.out.println("Lựa chọn không hợp lệ! Vui lòng chọn lại.");
+            }
         }
     }
+
     private  static void getByOwnerName() {
         System.out.println("\nNhập OwnerName: ");
         String ownerNameStr = scanner.nextLine();
@@ -1107,10 +1300,44 @@ public class Main_RentalManager {
         }
     }
     private static void displayRentalAgreements() {
-        System.out.println("\nDanh sách hợp đồng thuê hiện tại:");
-        for (RentalAgreement agreement : rentalAgreementManager.getAll()) {
-            System.out.println(agreement.toString());
-            System.out.println("---------------------------------------------------------");
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            // Hiển thị danh sách hợp đồng thuê hiện tại
+            System.out.println("\nDanh sách hợp đồng thuê hiện tại:");
+            for (RentalAgreement agreement : rentalAgreementManager.getAll()) {
+                System.out.println(agreement.toString());
+                System.out.println("---------------------------------------------------------");
+            }
+
+            // Menu lựa chọn
+            System.out.println("\nChọn một hành động:");
+            System.out.println("1. Sắp xếp hợp đồng thuê theo ID và hiển thị lại");
+            System.out.println("2. Lưu danh sách hợp đồng thuê vào file backup");
+            System.out.println("3. Quay lại menu chính");
+
+            System.out.print("Nhập lựa chọn của bạn: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Đọc bỏ ký tự xuống dòng
+
+            switch (choice) {
+                case 1:
+                    // Sắp xếp hợp đồng thuê theo ID
+                    rentalAgreementManager.sortRentalAgreementsById();
+                    System.out.println("\nDanh sách hợp đồng thuê đã được sắp xếp theo contractId.");
+                    break;
+                case 2:
+                    // Lưu danh sách hợp đồng thuê vào file backup
+                    System.out.print("Nhập tên file backup (bao gồm đường dẫn nếu cần): ");
+                    String backupFileName = scanner.nextLine();
+                    rentalAgreementManager.saveRentalAgreementsBackupToFile(backupFileName);
+                    break;
+                case 3:
+                    System.out.println("Quay lại menu chính.");
+                    return;  // Quay lại menu chính
+                default:
+                    System.out.println("Lựa chọn không hợp lệ! Vui lòng chọn lại.");
+            }
         }
     }
+
 }
