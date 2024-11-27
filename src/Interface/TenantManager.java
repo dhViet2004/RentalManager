@@ -110,15 +110,25 @@ public class TenantManager implements RentalManager<Tenant> {
             e.printStackTrace();
         }
     }
+    public boolean validateContractId(String contractId) {
+        // Regular expression to check if the contractId starts with "RA"
+        return contractId.matches("^T\\d+$");
 
+    }
     public Tenant inputTenantData() {
         Scanner scanner = new Scanner(System.in);
         String tenantId;
 
         // Yêu cầu nhập ID và kiểm tra trùng lặp
         while (true) {
-            System.out.print("Enter tenantId: ");
+            System.out.print("Enter tenantId (must start with 'T' followed by natural numbers): ");
             tenantId = scanner.nextLine();
+
+            // Kiểm tra hợp lệ theo biểu thức chính quy
+            if (!validateContractId(tenantId)) {
+                System.out.println("Error: tenantId must start with 'T' followed by natural numbers. Please re-enter.");
+                continue; // Yêu cầu nhập lại nếu không hợp lệ
+            }
 
             if (getOne(tenantId) != null) {
                 System.out.println("ID này đã tồn tại, vui lòng nhập lại ID khác.");
@@ -160,16 +170,19 @@ public class TenantManager implements RentalManager<Tenant> {
     public void sortTenantsById() {
         tenants.sort((t1, t2) -> {
             try {
-                int id1 = Integer.parseInt(t1.getId());
-                int id2 = Integer.parseInt(t2.getId());
-                return Integer.compare(id1, id2);
+                // Extract the numeric part of tenant IDs after the "T" prefix
+                int id1 = Integer.parseInt(t1.getId().substring(1)); // Remove "T" and convert the rest to an integer
+                int id2 = Integer.parseInt(t2.getId().substring(1)); // Same for the second tenant
+
+                return Integer.compare(id1, id2); // Compare the numeric values
             } catch (NumberFormatException e) {
-                // Nếu không thể chuyển đổi, so sánh chuỗi (phòng ngừa lỗi dữ liệu)
+                // If there's a problem with parsing the ID, fallback to string comparison
                 return t1.getId().compareTo(t2.getId());
             }
         });
         System.out.println("Tenants sorted by ID in ascending order.");
     }
+
 
     public void saveBackupToFile(String backupFileName) {
         try {

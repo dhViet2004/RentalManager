@@ -1,17 +1,17 @@
-1,BanDon,123456.0,RENTED,12,true,false
-2,Go Vap,200000.0,AVAILABLE,2,true,true
-3,Da Nang,350000.0,AVAILABLE,5,false,true
-4,Ha Noi,450000.0,RENTED,8,true,false
-5,Can Tho,600000.0,AVAILABLE,4,true,true
-6,Binh Duong,750000.0,RENTED,7,false,false
-7,Vung Tau,500000.0,AVAILABLE,3,true,true
-8,Long An,420000.0,RENTED,9,false,true
-9,Nha Trang,330000.0,AVAILABLE,6,true,false
-10,Thanh Hoa,700000.0,RENTED,10,true,false
-11,Quang Ninh,250000.0,AVAILABLE,2,false,true
-12,Dong Nai,540000.0,RENTED,11,true,false
-13,Quang Nam,370000.0,AVAILABLE,1,true,true
-14,Bac Giang,910000.0,RENTED,8,false,false
-15,Bac Ninh,640000.0,AVAILABLE,3,false,true
-20,Ben Tre,1.0E7,AVAILABLE,3,true,true
-18,Ca Mau,3000000.0,RENTED,3,true,true
+RP1,BanDon,123456.0,RENTED,12,true,false
+RP2,Go Vap,200000.0,AVAILABLE,2,true,true
+RP3,Da Nang,350000.0,AVAILABLE,5,false,true
+RP4,Ha Noi,450000.0,RENTED,8,true,false
+RP5,Can Tho,600000.0,AVAILABLE,4,true,true
+RP6,Binh Duong,750000.0,RENTED,7,false,false
+RP7,Vung Tau,500000.0,AVAILABLE,3,true,true
+RP8,Long An,420000.0,RENTED,9,false,true
+RP9,Nha Trang,330000.0,AVAILABLE,6,true,false
+RP10,Thanh Hoa,700000.0,RENTED,10,true,false
+RP11,Quang Ninh,250000.0,AVAILABLE,2,false,true
+RP12,Dong Nai,540000.0,RENTED,11,true,false
+RP13,Quang Nam,370000.0,AVAILABLE,1,true,true
+RP14,Bac Giang,910000.0,RENTED,8,false,false
+RP15,Bac Ninh,640000.0,AVAILABLE,3,false,true
+RP20,Ben Tre,1.0E7,AVAILABLE,3,true,true
+RP18,Ca Mau,3000000.0,RENTED,3,true,true

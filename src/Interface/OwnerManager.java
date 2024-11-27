@@ -116,7 +116,11 @@ public class OwnerManager implements RentalManager<Owner> {
         while (true) {
             System.out.print("Enter ownerId: ");
             ownerId = scanner.nextLine();
-
+            // Kiểm tra ownerId theo biểu thức chính quy "O" + dãy số
+            if (!ownerId.matches("^O\\d+$")) {
+                System.out.println("Invalid ownerId format. It must start with 'O' followed by digits.");
+                continue;
+            }
             if (getOne(ownerId) != null) {
                 System.out.println("ID này đã tồn tại, vui lòng nhập lại ID khác.");
             } else {
@@ -149,17 +153,19 @@ public class OwnerManager implements RentalManager<Owner> {
     public void sortOwnersById() {
         owners.sort((o1, o2) -> {
             try {
-                // Chuyển đổi ID sang số nếu có thể để sắp xếp
-                int id1 = Integer.parseInt(o1.getId());
-                int id2 = Integer.parseInt(o2.getId());
-                return Integer.compare(id1, id2);
+                // Extract the numeric part after the "O" prefix and convert it to an integer
+                int id1 = Integer.parseInt(o1.getId().substring(1)); // Remove "O" prefix and parse the number
+                int id2 = Integer.parseInt(o2.getId().substring(1)); // Same for the second owner
+
+                return Integer.compare(id1, id2); // Compare the numeric values
             } catch (NumberFormatException e) {
-                // Nếu không phải số, so sánh chuỗi
+                // If the ID can't be parsed as a number, fall back to comparing them as strings
                 return o1.getId().compareTo(o2.getId());
             }
         });
         System.out.println("Danh sách Owners đã được sắp xếp theo ID (tăng dần).");
     }
+
     // Save owners to a backup file
     public void saveBackupToFile(String backupFileName) {
         if (backupFileName == null || backupFileName.isEmpty()) {

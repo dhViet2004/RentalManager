@@ -102,6 +102,11 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
             e.printStackTrace();
         }
     }
+    public boolean validateContractId(String contractId) {
+        // Regular expression to check if the contractId starts with "RA"
+        return contractId.matches("^RA\\d+$");
+
+    }
 
     public RentalAgreement inputRentalAgreementData() {
         tenantManager.loadFromFile("src/File/rental_agreements.txt");
@@ -112,9 +117,13 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
 
         // Nhập contractId cho hợp đồng
         while (true) {
-            System.out.print("Enter contractId: ");
+            System.out.print("Enter contractId (must start with 'RA' followed by natural numbers): ");
             contractId = scanner.nextLine();
 
+            if (!validateContractId(contractId)) {
+                System.out.println("Error: contractId must start with 'RA' followed by natural numbers. Please re-enter.");
+                continue;
+            }
             String finalContractId = contractId;
             boolean exists = agreements.stream().anyMatch(r -> r.getContractId().equals(finalContractId));
             if (exists) {
@@ -395,17 +404,19 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
     public void sortRentalAgreementsById() {
         agreements.sort((a1, a2) -> {
             try {
-                // Chuyển đổi contractId sang số nếu có thể để sắp xếp
-                int id1 = Integer.parseInt(a1.getContractId());
-                int id2 = Integer.parseInt(a2.getContractId());
-                return Integer.compare(id1, id2);
+                // Extract the numeric part after the "RA" prefix and convert it to an integer
+                int id1 = Integer.parseInt(a1.getContractId().substring(2)); // Remove "RA" prefix and parse the number
+                int id2 = Integer.parseInt(a2.getContractId().substring(2)); // Same for the second agreement
+
+                return Integer.compare(id1, id2); // Compare the numeric values
             } catch (NumberFormatException e) {
-                // Nếu không phải số, so sánh chuỗi
+                // If the ID is not a number, compare the entire contract ID as a string
                 return a1.getContractId().compareTo(a2.getContractId());
             }
         });
         System.out.println("Danh sách Rental Agreements đã được sắp xếp theo contractId (tăng dần).");
     }
+
     public void saveRentalAgreementsBackupToFile(String backupFileName) {
         if (backupFileName == null || backupFileName.isEmpty()) {
             System.out.println("Tên file backup không hợp lệ.");

@@ -108,7 +108,11 @@ public class ResidentialPropertyManager implements RentalManager<ResidentialProp
         while (true) {
             System.out.print("Enter propertyId: ");
             propertyId = scanner.nextLine();
-
+            // Kiểm tra định dạng ID phải bắt đầu bằng "RP" và theo sau là các số
+            if (!propertyId.matches("^RP\\d+$")) {
+                System.out.println("Error: Property ID must start with 'RP' followed by numbers. Please re-enter.");
+                continue;
+            }
             // Kiểm tra ID đã tồn tại trong danh sách không
             String finalPropertyId = propertyId;
             boolean exists = properties.stream()
@@ -151,17 +155,19 @@ public class ResidentialPropertyManager implements RentalManager<ResidentialProp
     public void sortPropertiesById() {
         properties.sort((p1, p2) -> {
             try {
-                // Chuyển propertyId sang số để so sánh nếu có thể
-                int id1 = Integer.parseInt(p1.getPropertyId());
-                int id2 = Integer.parseInt(p2.getPropertyId());
-                return Integer.compare(id1, id2);
+                // Lấy phần số của propertyId sau "RP" và chuyển đổi sang số nguyên
+                int id1 = Integer.parseInt(p1.getPropertyId().substring(2)); // Bỏ "RP" và chuyển phần còn lại thành số
+                int id2 = Integer.parseInt(p2.getPropertyId().substring(2)); // Tương tự cho p2
+
+                return Integer.compare(id1, id2); // So sánh các số nguyên
             } catch (NumberFormatException e) {
-                // Nếu propertyId không phải số, sử dụng so sánh chuỗi
+                // Nếu không thể chuyển đổi thành số (ví dụ "RP001"), so sánh chuỗi
                 return p1.getPropertyId().compareTo(p2.getPropertyId());
             }
         });
         System.out.println("Danh sách Residential Properties đã được sắp xếp theo propertyId (tăng dần).");
     }
+
     // Lưu danh sách Residential Properties vào file backup
     public void saveBackupToFile(String backupFileName) {
         if (backupFileName == null || backupFileName.isEmpty()) {

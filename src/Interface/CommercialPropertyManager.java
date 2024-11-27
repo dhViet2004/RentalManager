@@ -96,7 +96,10 @@ public class CommercialPropertyManager implements RentalManager<CommercialProper
             e.printStackTrace();
         }
     }
-
+    public boolean validatePropertyId(String propertyId) {
+        // Regular expression to check if the propertyId starts with "CP" followed by one or more digits
+        return propertyId.matches("^CP\\d+$");
+    }
     // Phương thức để nhập dữ liệu CommercialProperty từ người dùng
     public CommercialProperty inputCommercialPropertyData() {
         Scanner scanner = new Scanner(System.in);
@@ -104,9 +107,14 @@ public class CommercialPropertyManager implements RentalManager<CommercialProper
 
         // Kiểm tra ID đã tồn tại chưa
         while (true) {
-            System.out.print("Enter propertyId: ");
+            System.out.print("Enter propertyId (must start with 'CP' followed by natural numbers): ");
             propertyId = scanner.nextLine();
 
+            // Validate propertyId format
+            if (!validatePropertyId(propertyId)) {
+                System.out.println("Error: Property ID must start with 'CP' followed by natural numbers. Please re-enter.");
+                continue; // Yêu cầu nhập lại nếu không hợp lệ
+            }
             // Kiểm tra ID đã tồn tại trong danh sách không
             String finalPropertyId = propertyId;
             boolean exists = properties.stream()
@@ -145,21 +153,27 @@ public class CommercialPropertyManager implements RentalManager<CommercialProper
 
         return property;
     }
-    // Sắp xếp commercial properties theo ID (tăng dần)
+    // Sắp xếp commercial properties theo ID (tăng dần), với ID bắt đầu bằng "CP"
     public void sortPropertiesById() {
         properties.sort((p1, p2) -> {
+            // Lấy phần chữ số sau "CP"
+            String id1 = p1.getPropertyId().substring(2); // Lấy phần sau "CP"
+            String id2 = p2.getPropertyId().substring(2); // Lấy phần sau "CP"
+
+            // So sánh dưới dạng số
             try {
-                // Chuyển ID sang số để so sánh nếu có thể
-                int id1 = Integer.parseInt(p1.getPropertyId());
-                int id2 = Integer.parseInt(p2.getPropertyId());
-                return Integer.compare(id1, id2);
+                int idNum1 = Integer.parseInt(id1); // Chuyển phần chữ số sang int
+                int idNum2 = Integer.parseInt(id2); // Chuyển phần chữ số sang int
+                return Integer.compare(idNum1, idNum2); // So sánh hai số
             } catch (NumberFormatException e) {
-                // Nếu ID không phải số, sử dụng so sánh chuỗi
-                return p1.getPropertyId().compareTo(p2.getPropertyId());
+                // Nếu không thể chuyển sang số (trường hợp ID không hợp lệ), so sánh theo chuỗi
+                return id1.compareTo(id2);
             }
         });
+
         System.out.println("Danh sách Commercial Properties đã được sắp xếp theo ID (tăng dần).");
     }
+
     // Lưu danh sách commercial properties vào file backup
     public void saveBackupToFile(String backupFileName) {
         if (backupFileName == null || backupFileName.isEmpty()) {

@@ -119,6 +119,11 @@ public class PaymentManager implements RentalManager<Payment> {
             System.out.print("Enter paymentId: ");
             paymentId = scanner.nextLine();
 
+            // Kiểm tra paymentId theo biểu thức chính quy "P" + dãy số
+            if (!paymentId.matches("^P\\d+$")) {
+                System.out.println("Invalid paymentId format. It must start with 'P' followed by digits.");
+                continue;
+            }
             // Kiểm tra xem paymentId đã tồn tại hay chưa
             boolean exists = false;
             for (Payment p : payments) {
@@ -161,21 +166,23 @@ public class PaymentManager implements RentalManager<Payment> {
 
         return payment; // Trả về đối tượng Payment đã tạo
     }
-    // Sắp xếp Payments theo ID (tăng dần)
+    // Sort payments by ID in ascending order
     public void sortPaymentsById() {
         payments.sort((p1, p2) -> {
             try {
-                // Chuyển đổi ID sang số nếu có thể để sắp xếp
-                int id1 = Integer.parseInt(p1.getPaymentId());
-                int id2 = Integer.parseInt(p2.getPaymentId());
-                return Integer.compare(id1, id2);
+                // Extract the numeric part after the "P" prefix and convert it to an integer
+                int id1 = Integer.parseInt(p1.getPaymentId().substring(1)); // Remove "P" prefix and parse the number
+                int id2 = Integer.parseInt(p2.getPaymentId().substring(1)); // Same for the second payment
+
+                return Integer.compare(id1, id2); // Compare the numeric values
             } catch (NumberFormatException e) {
-                // Nếu không phải số, so sánh chuỗi
+                // If the ID can't be parsed as a number, fall back to comparing them as strings
                 return p1.getPaymentId().compareTo(p2.getPaymentId());
             }
         });
         System.out.println("Danh sách Payments đã được sắp xếp theo ID (tăng dần).");
     }
+
 
     // Lưu danh sách Payments vào file backup
     public void saveBackupToFile(String backupFileName) {

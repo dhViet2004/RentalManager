@@ -108,6 +108,10 @@ public class HostManager implements RentalManager<Host> {
             e.printStackTrace();
         }
     }
+    public boolean validateHostId(String hostId) {
+        // Regular expression to check if the hostId starts with "H" followed by one or more digits
+        return hostId.matches("^H\\d+$");
+    }
 
     public Host inputHostData() {
         Scanner scanner = new Scanner(System.in);
@@ -115,8 +119,14 @@ public class HostManager implements RentalManager<Host> {
 
         // Yêu cầu nhập ID và kiểm tra trùng lặp
         while (true) {
-            System.out.print("Enter hostId: ");
+            System.out.print("Enter hostId (must start with 'H' followed by natural numbers): ");
             hostId = scanner.nextLine();
+
+            // Kiểm tra hợp lệ theo biểu thức chính quy cho hostId
+            if (!validateHostId(hostId)) {
+                System.out.println("Error: hostId must start with 'H' followed by natural numbers. Please re-enter.");
+                continue; // Yêu cầu nhập lại nếu không hợp lệ
+            }
 
             if (getOne(hostId) != null) {
                 System.out.println("ID này đã tồn tại, vui lòng nhập lại ID khác.");
@@ -151,12 +161,13 @@ public class HostManager implements RentalManager<Host> {
     public void sortHostsById() {
         hosts.sort((h1, h2) -> {
             try {
-                // Chuyển đổi ID sang số để so sánh nếu có thể
-                int id1 = Integer.parseInt(h1.getId());
-                int id2 = Integer.parseInt(h2.getId());
-                return Integer.compare(id1, id2);
+                // Extract the numeric part after the "H" prefix and convert it to an integer
+                int id1 = Integer.parseInt(h1.getId().substring(1)); // Remove "H" prefix and parse the number
+                int id2 = Integer.parseInt(h2.getId().substring(1)); // Same for the second host
+
+                return Integer.compare(id1, id2); // Compare the numeric values
             } catch (NumberFormatException e) {
-                // Nếu ID không phải số, dùng so sánh chuỗi
+                // If the ID is not a number, compare the entire host ID as a string
                 return h1.getId().compareTo(h2.getId());
             }
         });
