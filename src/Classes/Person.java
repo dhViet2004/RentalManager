@@ -69,11 +69,11 @@ public abstract class Person {
     @Override
     public String toString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        return "Person{" +
-                "id: " + id + '\'' +
-                "| fullName: " + fullName + '\'' +
-                "| dateOfBirth: " + dateFormat.format(dateOfBirth) +
-                "| contactInfo: " + contactInfo + '\'' +
-                '}';
+        return String.format("|%-15s|%-20s|%-15s|%-25s",
+                id,
+                fullName,
+                dateFormat.format(dateOfBirth),
+                contactInfo);
     }
+
 }

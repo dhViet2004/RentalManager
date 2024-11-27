@@ -124,49 +124,104 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
             }
         }
 
-        // Nhập tenantId cho tenant chính
-        System.out.print("Enter main tenantId: ");
-        String tenantId = scanner.nextLine();
+        String tenantId;
+        Tenant tenant = null;
 
-        Tenant tenant = tenantManager.getOne(tenantId);
-        if(tenant!=null){
-            System.out.println(tenant);
-        }else{
-            System.out.println("No tenant found with id: " + tenantId);
+        do {
+            // Nhập tenantId cho tenant chính
+            System.out.print("Enter main tenantId: ");
+            tenantId = scanner.nextLine();
+            tenant = tenantManager.getOne(tenantId);
+            if (tenant != null) {
+                System.out.println(tenant);
+            } else {
+                System.out.println("No tenant found with id: " + tenantId);
+            }
+        } while (tenant == null);
+
+
+        List<Tenant> subTenants = new ArrayList<>();
+        int subTenantCount;
+
+        // Vòng lặp kiểm tra định dạng cho số lượng sub-tenants
+        while (true) {
+            try {
+                System.out.print("Enter number of sub-tenants: ");
+                subTenantCount = Integer.parseInt(scanner.nextLine());
+                if (subTenantCount < 0) {
+                    System.out.println("Number of sub-tenants cannot be negative. Please try again.");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
         }
 
         // Nhập danh sách sub-tenants
-        List<Tenant> subTenants = new ArrayList<>();
-        System.out.print("Enter number of sub-tenants: ");
-        int subTenantCount = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
         for (int i = 0; i < subTenantCount; i++) {
-            System.out.print("Enter sub-tenantId: ");
-            String subTenantId = scanner.nextLine();
-            Tenant temp = tenantManager.getOne(subTenantId);
-            if(temp!=null){
-                subTenants.add(temp);
-                System.out.println(temp);
-            }else {
-                System.out.println("Don't find");
+            while (true) { // Vòng lặp nếu không tìm thấy tenant
+                System.out.print("Enter sub-tenantId: ");
+                String subTenantId = scanner.nextLine();
+                Tenant temp = tenantManager.getOne(subTenantId);
+                if (temp != null) {
+                    subTenants.add(temp);
+                    System.out.println(temp);
+                    break; // Thoát vòng lặp nếu tìm thấy tenant
+                } else {
+                    System.out.println("Don't find sub-tenant with id: " + subTenantId + ". Please try again.");
+                }
             }
         }
-        List<Host> listHost = new ArrayList<>();
-        System.out.print("Enter number of hosts: ");
-        int hostCount = scanner.nextInt();
-        scanner.nextLine();
-        for (int i = 0; i < hostCount; i++) {
-            System.out.print("Enter hostId: ");
-            String hostId = scanner.nextLine();
-            Host host = hostManager.getOne(hostId);
-            if (host!=null){
-                listHost.add(host);
-                System.out.println(host);
-            }else {
-                System.out.println("Don't find");
-            }
 
+        // Hiển thị danh sách sub-tenants đã nhập
+        System.out.println("Sub-tenants list:");
+        for (Tenant t : subTenants) {
+            System.out.println(t);
         }
+
+
+
+        List<Host> listHost = new ArrayList<>();
+        int hostCount;
+
+        // Vòng lặp kiểm tra định dạng cho số lượng hosts
+        while (true) {
+            try {
+                System.out.print("Enter number of hosts: ");
+                hostCount = Integer.parseInt(scanner.nextLine());
+                if (hostCount < 0) {
+                    System.out.println("Number of hosts cannot be negative. Please try again.");
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+
+        // Nhập danh sách hosts
+        for (int i = 0; i < hostCount; i++) {
+            while (true) { // Vòng lặp nếu không tìm thấy host
+                System.out.print("Enter hostId: ");
+                String hostId = scanner.nextLine();
+                Host host = hostManager.getOne(hostId);
+                if (host != null) {
+                    listHost.add(host);
+                    System.out.println(host);
+                    break; // Thoát vòng lặp khi tìm thấy host
+                } else {
+                    System.out.println("Don't find host with id: " + hostId + ". Please try again.");
+                }
+            }
+        }
+
+        // Hiển thị danh sách hosts đã nhập
+        System.out.println("Hosts list:");
+        for (Host host : listHost) {
+            System.out.println(host);
+        }
+
 
         // Nhập rentalCycle (chu kỳ thuê) - Đảm bảo biến rentalCycle là final hoặc effectively final
         final RentalAgreement.RentalCycleType[] rentalCycle = new RentalAgreement.RentalCycleType[1]; // Dùng mảng để làm biến final
@@ -220,17 +275,25 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
             }
         }
 
-        // Nhập thông tin chủ sở hữu (owner)
-        System.out.print("Enter ownerId: ");
-        String ownerId = scanner.nextLine();
+        // Tạo đối tượng OwnerManager và tải dữ liệu
         OwnerManager ownerManager = new OwnerManager();
         ownerManager.loadFromFile("src/File/rental_agreements.txt");
-        Owner owner = ownerManager.getOne(ownerId);
-        if (owner!=null){
-            System.out.println(owner);
-        }else{
-            System.out.println("Don't find");
+
+        Owner owner;
+        while (true) { // Vòng lặp nếu không tìm thấy owner
+            // Nhập thông tin chủ sở hữu (owner)
+            System.out.print("Enter ownerId: ");
+            String ownerId = scanner.nextLine();
+
+            owner = ownerManager.getOne(ownerId);
+            if (owner != null) {
+                System.out.println(owner);
+                break; // Thoát vòng lặp nếu tìm thấy owner
+            } else {
+                System.out.println("Owner with id: " + ownerId + " not found. Please try again.");
+            }
         }
+
 
         System.out.println("Enter Property\n");
         System.out.print("1. Commercial_Property\n");
@@ -240,24 +303,55 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
         scanner.nextLine();
         switch (option) {
             case 1:
-                System.out.print("Enter property id: ");
-                String propertyId = scanner.nextLine();
                 CommercialPropertyManager propertyManager = new CommercialPropertyManager();
                 propertyManager.loadFromFile("src/File/rental_agreements.txt");
-                CommercialProperty property = propertyManager.getOne(propertyId);
+                CommercialProperty property;
+
+                while (true) { // Vòng lặp nếu không tìm thấy property
+                    System.out.print("Enter property id: ");
+                    String propertyId = scanner.nextLine();
+
+                    property = propertyManager.getOne(propertyId);
+                    if (property != null) {
+                        System.out.println("Property found: " + property);
+                        break; // Thoát vòng lặp nếu tìm thấy property
+                    } else {
+                        System.out.println("Property with id: " + propertyId + " not found. Please try again.");
+                    }
+                }
+
                 // Tạo và trả về RentalAgreement
-                rentalAgreement = new RentalAgreement(contractId, owner, tenant, subTenants,property,listHost, rentalCycle[0],
-                        duration, contractTerms, rentalFee, status[0]);
+                rentalAgreement = new RentalAgreement(
+                        contractId, owner, tenant, subTenants, property, listHost,
+                        rentalCycle[0], duration, contractTerms, rentalFee, status[0]
+                );
                 break;
+
             case 2:
-                System.out.print("Enter property id: ");
-                String propertyID = scanner.nextLine();
                 ResidentialPropertyManager residentialPropertyManager = new ResidentialPropertyManager();
                 residentialPropertyManager.loadFromFile("src/File/rental_agreements.txt");
-                ResidentialProperty residentialProperty = residentialPropertyManager.getOne(propertyID);
-                rentalAgreement = new RentalAgreement(contractId, owner, tenant, subTenants,residentialProperty,listHost, rentalCycle[0],
-                        duration, contractTerms, rentalFee, status[0]);
+                ResidentialProperty residentialProperty;
+
+                while (true) { // Vòng lặp nếu không tìm thấy property
+                    System.out.print("Enter property id: ");
+                    String propertyID = scanner.nextLine();
+
+                    residentialProperty = residentialPropertyManager.getOne(propertyID);
+                    if (residentialProperty != null) {
+                        System.out.println("Property found: " + residentialProperty);
+                        break; // Thoát vòng lặp nếu tìm thấy property
+                    } else {
+                        System.out.println("Property with id: " + propertyID + " not found. Please try again.");
+                    }
+                }
+
+                // Tạo và trả về RentalAgreement
+                rentalAgreement = new RentalAgreement(
+                        contractId, owner, tenant, subTenants, residentialProperty, listHost,
+                        rentalCycle[0], duration, contractTerms, rentalFee, status[0]
+                );
                 break;
+
         }
         return rentalAgreement;
     }

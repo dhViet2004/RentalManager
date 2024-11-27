@@ -36,11 +36,12 @@ public class Host extends Person implements Comparable<Host> {
 
     @Override
     public String toString() {
-        return super.toString() +
-                "managedProperties=" + managedProperties +
-                ", cooperatingOwners=" + cooperatingOwners +
-                '}';
+        return String.format("%s|%-35s|%-35s|",
+                super.toString(),
+                managedProperties != null ? managedProperties.toString() : "No managed properties",
+                cooperatingOwners != null ? cooperatingOwners.toString() : "No cooperating owners");
     }
+
     @Override
     public int compareTo(Host other) {
         return Integer.compare(this.managedProperties.size(), other.managedProperties.size());

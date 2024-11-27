@@ -3,11 +3,9 @@ package Interface;
 import Classes.Tenant;
 import DAO.TenantDAO;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class TenantManager implements RentalManager<Tenant> {
     private List<Tenant> tenants = new ArrayList<>();
@@ -133,20 +131,29 @@ public class TenantManager implements RentalManager<Tenant> {
         System.out.print("Enter full name: ");
         String fullName = scanner.nextLine();
 
-        System.out.print("Enter date of birth (dd-MM-yyyy): ");
-        String dateOfBirthStr = scanner.nextLine();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false); // Đảm bảo kiểm tra nghiêm ngặt định dạng ngày
+
+        Date dateOfBirth = null;
+
+        while (dateOfBirth == null) { // Vòng lặp cho đến khi nhập đúng
+            System.out.print("Enter date of birth (dd-MM-yyyy): ");
+            String dateOfBirthStr = scanner.nextLine();
+
+            try {
+                // Ép kiểu String sang Date
+                dateOfBirth = dateFormat.parse(dateOfBirthStr);
+                System.out.println("Date of Birth: " + dateOfBirth);
+            } catch (ParseException e) {
+                // Thông báo lỗi nếu định dạng không đúng
+                System.out.println("Invalid date format. Please enter the date in dd-MM-yyyy format.");
+            }
+        }
 
         System.out.print("Enter contact info: ");
         String contactInfo = scanner.nextLine();
 
-        Tenant tenant = new Tenant(fullName, tenantId, null, contactInfo, null, null);
-
-        // Chuyển đổi dateOfBirth từ String sang Date nếu cần thiết
-        try {
-            tenant.setDateOfBirth(new SimpleDateFormat("dd-MM-yyyy").parse(dateOfBirthStr));
-        } catch (Exception e) {
-            System.out.println("Invalid date format! Setting dateOfBirth to null.");
-        }
+        Tenant tenant = new Tenant(fullName, tenantId,dateOfBirth, contactInfo, null, null);
 
         return tenant;
     }

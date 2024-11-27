@@ -223,6 +223,22 @@ public class Main_RentalManager {
                 rentalAgreementManager.add(newAgreement); // Thêm hợp đồng thuê vào danh sách
                 rentalAgreementManager.saveToFile("src/File/rental_agreements.txt"); // Lưu danh sách hợp đồng thuê vào file
                 System.out.println("Thêm hợp đồng thuê thành công!");
+
+                // Cập nhật danh sách hợp đồng thuê của tenant
+                Tenant tenantUpdate = tenantManager.getOne(newAgreement.getMainTenant().getId());
+                if (tenantUpdate != null) {
+                    List<RentalAgreement> listRentalAgreements = tenantUpdate.getRentalAgreements();
+                    if (listRentalAgreements == null) {
+                        listRentalAgreements = new ArrayList<>();
+                    }
+                    listRentalAgreements.add(newAgreement); // Thêm hợp đồng mới vào cuối danh sách
+                    tenantUpdate.setRentalAgreements(listRentalAgreements); // Cập nhật lại danh sách trong tenant
+                    tenantManager.update(tenantUpdate); // Lưu thông tin tenant đã cập nhật nếu cần
+                    tenantManager.saveToFile("src/File/rental_agreements.txt");
+                } else {
+                    System.out.println("Không tìm thấy tenant cần cập nhật.");
+                }
+
                 displayRentalAgreements();
             } else if ("n".equals(confirmation)) {
                 System.out.println("Hành động thêm hợp đồng đã bị hủy.");
@@ -479,9 +495,13 @@ public class Main_RentalManager {
     private static void displayTenants() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("\nDanh sách tenants hiện tại:");
+            System.out.println("\n ================================================================Danh sách tenants hiện tại============================================================");
+            System.out.println("|______________________________________________________________________________________________________________________________________________________|");
+            System.out.println("|      Id       |      Full Name     |     Date      |      Contract Infor     |         RentalAgreements          |           PaymentRecords          | ");
+            System.out.println("|______________________________________________________________________________________________________________________________________________________|");
             for (Tenant tenant : tenantManager.getAll()) {
                 System.out.println(tenant.toString());
+                System.out.println("|______________________________________________________________________________________________________________________________________________________|");
             }
 
             System.out.println("\nChọn một hành động:");
@@ -705,10 +725,13 @@ public class Main_RentalManager {
     private static void displayPayments() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("\nDanh sách thanh toán hiện tại:");
+            System.out.println("\n================================Danh sách thanh toán hiện tại===================================");
+            System.out.println("|______________________________________________________________________________________________|");
+            System.out.println("|  Id           |  Full name    |   Amount      |     Date      |     Payment Method           |");
+            System.out.println("|______________________________________________________________________________________________|");
             for (Payment payment : paymentManager.getAll()) {
                 System.out.println(payment.toString());
-                System.out.println("---------------------------------------------------------");
+                System.out.println("|______________________________________________________________________________________________|");
             }
 
             // Menu lựa chọn
@@ -746,9 +769,13 @@ public class Main_RentalManager {
     private static void displayHosts() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("\nDanh sách Host hiện tại:");
+            System.out.println("\n ================================================================Danh sách Host hiện tại============================================================");
+            System.out.println("|______________________________________________________________________________________________________________________________________________________|");
+            System.out.println("|      Id       |      Full Name     |     Date      |      Contract Infor     |        ManagedProperties          |         CooperatingOwners         | ");
+            System.out.println("|______________________________________________________________________________________________________________________________________________________|");
             for (Host host : hostManager.getAll()) {
                 System.out.println(host.toString());
+                System.out.println("|______________________________________________________________________________________________________________________________________________________|");
             }
 
             // Menu lựa chọn
@@ -863,9 +890,13 @@ public class Main_RentalManager {
     private static void displayOwners() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("\nDanh sách chủ sở hữu hiện tại:");
+            System.out.println("\n =================================================================Danh sách Owner hiện tại============================================================");
+            System.out.println("|______________________________________________________________________________________________________________________________________________________|");
+            System.out.println("|      Id       |      Full Name     |     Date      |      Contract Infor     |         RentalAgreements          |           PaymentRecords          | ");
+            System.out.println("|______________________________________________________________________________________________________________________________________________________|");
             for (Owner owner : ownerManager.getAll()) {
                 System.out.println(owner.toString());
+                System.out.println("|______________________________________________________________________________________________________________________________________________________|");
             }
 
             // Menu lựa chọn

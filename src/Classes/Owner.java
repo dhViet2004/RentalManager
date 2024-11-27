@@ -35,10 +35,10 @@ public class Owner extends Person{
 
     @Override
     public String toString() {
-        return "Owner{" +
-                super.toString() + // Gọi toString của lớp cha Person
-                "ownedProperties=" + ownedProperties +
-                ", managingHosts=" + managingHosts +
-                '}';
+        return String.format("%s|%-35s|%-35s",
+                super.toString(), // Gọi toString của lớp cha
+                ownedProperties != null ? ownedProperties.toString() : "No owned properties",
+                managingHosts != null ? managingHosts.toString() : "No managing hosts");
     }
+
 }

@@ -1,5 +1,6 @@
 package Classes;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -73,11 +74,12 @@ public class Payment {
 
     @Override
     public String toString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         return String.format("|%-15s|%-15s|%-15s|%-15s|%-30s|",
-                "PaymentId=" + paymentId,
-                "Tenant=" + tenant,
-                "Amount=" + amount,
-                "Date=" + date,
-                "PaymentMethod=" + paymentMethod);
+                paymentId,
+                tenant.getFullName(),
+                amount,
+                dateFormat.format(date), // Định dạng ngày
+                paymentMethod);
     }
 }
