@@ -1,4 +1,4 @@
-H1,Hoang Viet,23-06-0006,xyzStudio.edu
+H1,Hoang Viet,30-12-2000,xyzStudio.edu
 H2,Khanh Tuyen Nguyen,01-02-2002,d1234543@edu.vn
 H3,Minh Duc Tran,10-10-1995,minhduc1995@gmail.com
 H4,Phuong Anh Le,12-07-1999,phuonganh99@edu.vn

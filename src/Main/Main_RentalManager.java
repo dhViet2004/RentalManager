@@ -871,15 +871,28 @@ public class Main_RentalManager {
             existingHost.setFullName(newName);
         }
 
-        System.out.print("Ngày sinh hiện tại (yyyy-MM-dd): " + existingHost.getDateOfBirth() + " -> ");
-        String newDateOfBirth = scanner.nextLine();
-        if (!newDateOfBirth.isEmpty()) {
-            try {
-                Date date = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(newDateOfBirth);
-                existingHost.setDateOfBirth(date);
-            } catch (ParseException e) {
-                System.out.println("Ngày sinh không hợp lệ. Định dạng đúng: yyyy-MM-dd");
+        // Nhập ngày sinh mới
+        System.out.print("Ngày sinh hiện tại (dd-MM-yyyy): " +
+                new SimpleDateFormat("dd-MM-yyyy").format(existingHost.getDateOfBirth()) + " -> ");
+        String newDateOfBirthStr;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false); // Kiểm tra nghiêm ngặt định dạng ngày
+        java.util.Date newDateOfBirth = null;
+
+        do {
+            newDateOfBirthStr = scanner.nextLine();
+            if (newDateOfBirthStr.isEmpty()) {
+                break; // Người dùng không nhập, giữ nguyên giá trị cũ
             }
+            try {
+                newDateOfBirth = dateFormat.parse(newDateOfBirthStr); // Parse ngày sinh
+            } catch (ParseException e) {
+                System.out.print("Ngày sinh không hợp lệ. Vui lòng nhập lại (dd-MM-yyyy): ");
+            }
+        } while (newDateOfBirth == null);
+
+        if (newDateOfBirth != null) {
+            existingHost.setDateOfBirth(newDateOfBirth);
         }
 
         System.out.print("Thông tin liên hệ hiện tại: " + existingHost.getContactInfo() + " -> ");
@@ -990,17 +1003,29 @@ public class Main_RentalManager {
             existingOwner.setFullName(newName);
         }
 
-        System.out.print("Ngày sinh hiện tại (yyyy-MM-dd): " + existingOwner.getDateOfBirth() + " -> ");
-        String newDateOfBirth = scanner.nextLine();
-        if (!newDateOfBirth.isEmpty()) {
-            try {
-                Date date = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(newDateOfBirth);
-                existingOwner.setDateOfBirth(date);
-            } catch (ParseException e) {
-                System.out.println("Ngày sinh không hợp lệ. Định dạng đúng: yyyy-MM-dd");
-            }
-        }
+        // Nhập ngày sinh mới
+        System.out.print("Ngày sinh hiện tại (dd-MM-yyyy): " +
+                new SimpleDateFormat("dd-MM-yyyy").format(existingOwner.getDateOfBirth()) + " -> ");
+        String newDateOfBirthStr;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false); // Kiểm tra nghiêm ngặt định dạng ngày
+        java.util.Date newDateOfBirth = null;
 
+        do {
+            newDateOfBirthStr = scanner.nextLine();
+            if (newDateOfBirthStr.isEmpty()) {
+                break; // Người dùng không nhập, giữ nguyên giá trị cũ
+            }
+            try {
+                newDateOfBirth = dateFormat.parse(newDateOfBirthStr);
+            } catch (ParseException e) {
+                System.out.print("Ngày sinh không hợp lệ. Vui lòng nhập lại (dd-MM-yyyy): ");
+            }
+        } while (newDateOfBirth == null);
+
+        if (newDateOfBirth != null) {
+            existingOwner.setDateOfBirth(newDateOfBirth);
+        }
         System.out.print("Thông tin liên hệ hiện tại: " + existingOwner.getContactInfo() + " -> ");
         String newContactInfo = scanner.nextLine();
         if (!newContactInfo.isEmpty()) {
