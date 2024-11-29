@@ -6,6 +6,7 @@ import Interface.OwnerManager;
 import Interface.TenantManager;
 
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -15,10 +16,13 @@ public class RentalAgreementDAO {
     private static final HostManager hostManager = new HostManager();
     private static final String FILE_PATH = "src/File/rental_agreements.txt";
 
-    // Convert RentalAgreement object to String for file writing
     private String convertRentalAgreementToString(RentalAgreement agreement) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = dateFormat.format(agreement.getContractDate()); // Format contractDate
+
         return String.join(",",
                 agreement.getContractId(),
+                formattedDate, // Add formatted contractDate
                 agreement.getOwner().getId(),
                 agreement.getMainTenant().getId(),
                 convertSubTenantsToString(agreement.getSubTenants()),
@@ -32,33 +36,48 @@ public class RentalAgreementDAO {
         );
     }
 
-    // Convert String from file to RentalAgreement object
+
     private RentalAgreement convertStringToRentalAgreement(String line) {
         String[] parts = line.split(",");
-        if (parts.length < 11) {
+        if (parts.length < 12) { // Adjust the check for the new Date field
             System.err.println("Invalid format: " + line);
             return null;
         }
 
-        String contractId = parts[0];
-        ownerManager.loadFromFile("src/File/owners.txt");
-        Owner owner = ownerManager.getOne(parts[1]);
+        try {
+            String contractId = parts[0];
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date contractDate = dateFormat.parse(parts[1]); // Parse the contractDate
 
-        tenantManager.loadFromFile("src/File/tenants.txt");
-        Tenant mainTenant = tenantManager.getOne(parts[2]);
+            ownerManager.loadFromFile("src/File/owners.txt");
+            Owner owner = ownerManager.getOne(parts[2]);
 
-        List<Tenant> subTenants = convertStringToSubTenants(parts[3]);
-        Property rentedProperty = convertStringToProperty(parts[4]);
-        List<Host> hosts = convertStringToHosts(parts[5]);
-        RentalAgreement.RentalCycleType rentalCycle = RentalAgreement.RentalCycleType.valueOf(parts[6]);
-        int duration = Integer.parseInt(parts[7]);
-        String contractTerms = parts[8];
-        double rentalFee = Double.parseDouble(parts[9]);
-        RentalAgreement.RentalAgreementStatus status = RentalAgreement.RentalAgreementStatus.valueOf(parts[10]);
+            tenantManager.loadFromFile("src/File/tenants.txt");
+            Tenant mainTenant = tenantManager.getOne(parts[3]);
 
-        return new RentalAgreement(contractId, owner, mainTenant, subTenants, rentedProperty, hosts,
-                rentalCycle, duration, contractTerms, rentalFee, status);
+            List<Tenant> subTenants = convertStringToSubTenants(parts[4]);
+            Property rentedProperty = convertStringToProperty(parts[5]);
+            List<Host> hosts = convertStringToHosts(parts[6]);
+            RentalAgreement.RentalCycleType rentalCycle = RentalAgreement.RentalCycleType.valueOf(parts[7]);
+            int duration = Integer.parseInt(parts[8]);
+            String contractTerms = parts[9];
+            double rentalFee = Double.parseDouble(parts[10]);
+            RentalAgreement.RentalAgreementStatus status = RentalAgreement.RentalAgreementStatus.valueOf(parts[11]);
+
+            return new RentalAgreement(contractId, contractDate, owner, mainTenant, subTenants, rentedProperty, hosts,
+                    rentalCycle, duration, contractTerms, rentalFee, status);
+        } catch (ParseException e) {
+            System.err.println("Error parsing contract date: " + parts[1]);
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            System.err.println("Error processing line: " + line);
+            e.printStackTrace();
+            return null;
+        }
     }
+
+
 
     // Serialize Property object to String
     private String convertPropertyToString(Property property) {

@@ -1,11 +1,14 @@
 package Classes;
 
+import java.text.SimpleDateFormat;
 import java.time.Period;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 public class RentalAgreement implements Comparable<RentalAgreement> {
     private String contractId;
+    private Date ContractDate;
     private Owner owner;
     private Tenant mainTenant;
     private List<Tenant> subTenants;
@@ -28,10 +31,11 @@ public class RentalAgreement implements Comparable<RentalAgreement> {
     }
 
     // Constructor cho RentalAgreement
-    public RentalAgreement(String contractId,Owner owner ,Tenant mainTenant, List<Tenant> subTenants,
+    public RentalAgreement(String contractId,Date ConDate,Owner owner ,Tenant mainTenant, List<Tenant> subTenants,
                            Property rentedProperty, List<Host> hosts, RentalCycleType rentalCycle,
                            int duration, String contractTerms, double rentalFee, RentalAgreementStatus status) {
         this.contractId = contractId;
+        this.ContractDate = ConDate;
         this.owner = owner;
         this.mainTenant = mainTenant;
         this.subTenants = subTenants;
@@ -71,6 +75,11 @@ public class RentalAgreement implements Comparable<RentalAgreement> {
     public void setContractId(String contractId) {
         this.contractId = contractId;
     }
+
+    public Date getContractDate() { return ContractDate;}
+
+    public void setContractDate(Date contractDate) { this.ContractDate = contractDate;}
+
 
     public Tenant getMainTenant() {
         return mainTenant;
@@ -156,6 +165,10 @@ public class RentalAgreement implements Comparable<RentalAgreement> {
 
     @Override
     public String toString() {
+        // Format the contractDate
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = (ContractDate != null) ? dateFormat.format(ContractDate) : "N/A";
+
         // Chuỗi fullname của từng subTenant
         StringBuilder subTenantsNames = new StringBuilder();
         if (subTenants != null && !subTenants.isEmpty()) {
@@ -184,16 +197,18 @@ public class RentalAgreement implements Comparable<RentalAgreement> {
             hostsNames.append("Không có");
         }
 
-        return  "| ContractId: " + contractId + "\n"+
+        return  "| ContractId: " + contractId + "\n" +
+                "| ContractDate: " + formattedDate + "\n" +
                 "| FullName_Owner: " + owner.getFullName() + "\n" +
                 "| MainTenant: " + mainTenant.getFullName() + " | SubTenants: " + subTenantsNames + "\n" +
-                "| RentedProperty: "+ "\n" + rentedProperty + "\n" +
+                "| RentedProperty: " + "\n" + rentedProperty + "\n" +
                 "| Hosts: " + hostsNames + "\n" +
                 "| rentalCycle: " + rentalCycle + "\n" +
-                "| duration: " + duration +
+                "| duration: " + duration + "\n" +
                 "| contractTerms: " + contractTerms + "\n" +
                 "| rentalFee: " + rentalFee + "\n" +
                 "| status: " + status;
     }
+
 
 }

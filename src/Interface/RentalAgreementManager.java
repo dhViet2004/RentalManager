@@ -2,7 +2,10 @@ package Interface;
 
 import Classes.*;
 import DAO.RentalAgreementDAO;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -329,12 +332,28 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
                     }
                 }
 
+                // Lấy ngày hiện tại và định dạng nó thành dd-MM-yyyy
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                Date contractDate = new Date(); // Lấy ngày hiện tại
+                String formattedDate = dateFormat.format(contractDate); // Định dạng ngày
+
                 // Tạo và trả về RentalAgreement
                 rentalAgreement = new RentalAgreement(
-                        contractId, owner, tenant, subTenants, property, listHost,
-                        rentalCycle[0], duration, contractTerms, rentalFee, status[0]
+                        contractId,
+                        contractDate, // Sử dụng contractDate là ngày hiện tại
+                        owner,
+                        tenant,
+                        subTenants,
+                        property,
+                        listHost,
+                        rentalCycle[0],
+                        duration,
+                        contractTerms,
+                        rentalFee,
+                        status[0]
                 );
                 break;
+
 
             case 2:
                 ResidentialPropertyManager residentialPropertyManager = new ResidentialPropertyManager();
@@ -353,10 +372,10 @@ public class RentalAgreementManager implements RentalManager<RentalAgreement> {
                         System.out.println("Property with id: " + propertyID + " not found. Please try again.");
                     }
                 }
-
+                Date contractDate1 = new Date(); // Lấy ngày hiện tại
                 // Tạo và trả về RentalAgreement
                 rentalAgreement = new RentalAgreement(
-                        contractId, owner, tenant, subTenants, residentialProperty, listHost,
+                        contractId, contractDate1, owner, tenant, subTenants, residentialProperty, listHost,
                         rentalCycle[0], duration, contractTerms, rentalFee, status[0]
                 );
                 break;
