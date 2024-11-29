@@ -589,6 +589,7 @@ public class Main_RentalManager {
         System.out.println("Cập nhật tenant với ID: " + tenantId);
         System.out.println("Nhấn Enter để giữ nguyên giá trị cũ.");
 
+
         // Nhập các thông tin mới, để trống nếu giữ nguyên giá trị cũ
         System.out.print("Tên đầy đủ hiện tại: " + existingTenant.getFullName() + " -> ");
         String newFullName = scanner.nextLine();
@@ -596,15 +597,27 @@ public class Main_RentalManager {
             existingTenant.setFullName(newFullName);
         }
 
-        System.out.print("Ngày sinh hiện tại (yyyy-MM-dd): " + existingTenant.getDateOfBirth() + " -> ");
-        String newDateOfBirthStr = scanner.nextLine();
-        if (!newDateOfBirthStr.isEmpty()) {
-            try {
-                Date newDateOfBirth = java.sql.Date.valueOf(newDateOfBirthStr);
-                existingTenant.setDateOfBirth(newDateOfBirth);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Ngày sinh không hợp lệ. Bỏ qua cập nhật ngày sinh.");
+        System.out.print("Ngày sinh hiện tại (dd-MM-yyyy): " +
+                new SimpleDateFormat("dd-MM-yyyy").format(existingTenant.getDateOfBirth()) + " -> ");
+        String newDateOfBirthStr;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        dateFormat.setLenient(false); // Bật kiểm tra nghiêm ngặt định dạng ngày
+        java.util.Date newDateOfBirth = null;
+
+        do {
+            newDateOfBirthStr = scanner.nextLine();
+            if (newDateOfBirthStr.isEmpty()) {
+                break; // Người dùng không nhập gì, giữ nguyên giá trị cũ
             }
+            try {
+                newDateOfBirth = dateFormat.parse(newDateOfBirthStr);
+            } catch (ParseException e) {
+                System.out.print("Ngày sinh không hợp lệ. Vui lòng nhập lại (dd-MM-yyyy): ");
+            }
+        } while (newDateOfBirth == null);
+
+        if (newDateOfBirth != null) {
+            existingTenant.setDateOfBirth(new java.sql.Date(newDateOfBirth.getTime()));
         }
 
         System.out.print("Thông tin liên hệ hiện tại: " + existingTenant.getContactInfo() + " -> ");

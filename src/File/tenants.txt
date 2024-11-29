@@ -1,6 +1,6 @@
 T3,Dang Hoang Viet,12-12-2003,1234567
 T2,Nguyen Van A,12-01-1999,HCM
-T1,Doan Van Nghe,01-01-2001,Go Vap
+T1,Doan Van Nghe,20-01-2022,Go Vap
 T4,Chau Tuan Trang,02-03-2000,chautuan23@gmail.com
 T5,Pham Minh Tu,15-05-1998,tupham98@gmail.com
 T6,Tran Kim Long,22-07-1997,Da Nang
